@@ -35,7 +35,7 @@ public class JobDetailTest {
 	@Test
 	public void testLongHtml() throws Exception {
 
-		String jobDetailHtml = IOUtils.toString(this.getClass().getResourceAsStream("fullpage2.html"), "UTF-8");
+		String jobDetailHtml = IOUtils.toString(this.getClass().getResourceAsStream("fullpage.html"), "UTF-8");
 
 		JobDetail j = JobDetail.fromHtml(jobDetailHtml);
 

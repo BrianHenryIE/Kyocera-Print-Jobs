@@ -7,6 +7,8 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.net.ssl.SSLContext;
 
@@ -51,7 +53,17 @@ public class ServiceTest {
 
 		JobDetail j = service.getJob(1635);
 
+		assertEquals(1, j.getJobType());
 		assertEquals("doc00163520151014145654", j.getJobName());
+		// assertEquals("", j.getUserName());
+		assertEquals("connectedto", j.getConnectedTo());
+		assertEquals(LocalDateTime.parse("2015/10/14 14:56", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
+				j.getAcceptedTime());
+		assertEquals(LocalDateTime.parse("2015/10/14 14:57", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
+				j.getEndTime());
+		assertEquals(1, j.getOriginalPages());
+		assertEquals(1, j.getCopies());
+		assertEquals(1, j.getPrintedPages());
 
 	}
 

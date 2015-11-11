@@ -62,17 +62,18 @@ public class JobDetail {
 
 	static JobDetail fromHtml(String html) {
 
-		String stringPattern = "JobDetail\\[0\\] = sJobType\\[\"(?<jobType>\\d+)\"\\];\\n"
-				+ "JobDetail\\[1\\] = \"(?<jobName>.+)\";\\n" + "JobDetail\\[2\\] = \"(?<userName>.*)\";\\n"
-				+ "JobDetail\\[3\\] = (?<connectedTo>.*);\\n" + "JobDetail\\[4\\] = \"(?<acceptedTime>.*)\";\\n"
-				+ "JobDetail\\[5\\] = \"(?<endTime>.*)\";\\n" + "JobDetail\\[6\\] = \"(?<originalPages>\\d*)\";\\n"
-				+ "JobDetail\\[7\\] = \"(?<copies>\\d*)\"\\+\"/\"\\+\"\\d*\";\\n"
-				+ "JobDetail\\[8\\] = \"(?<printedPages>\\d*)\"\\+\"/\"\\+ Number\\(\"\\d*\"\\)\\*Number\\(\"\\d*\"\\);\\n"
+		String stringPattern = "JobDetail\\[0\\] = sJobType\\[\"(?<jobType>\\d+)\"\\];.*"
+				+ "JobDetail\\[1\\] = \"(?<jobName>.+?)\";.*" + "JobDetail\\[2\\] = \"(?<userName>.*)\";.*"
+				+ "JobDetail\\[3\\] = (?<connectedTo>.*?);.*" + "JobDetail\\[4\\] = \"(?<acceptedTime>.*)\";.*"
+				+ "JobDetail\\[5\\] = \"(?<endTime>.*)\";.*" + "JobDetail\\[6\\] = \"(?<originalPages>\\d*)\";.*"
+				+ "JobDetail\\[7\\] = \"(?<copies>\\d*)\"\\+\"/\"\\+\"\\d*\";.*"
+				+ "JobDetail\\[8\\] = \"(?<printedPages>\\d*)\"\\+\"/\"\\+ Number\\(\"\\d*\"\\)\\*Number\\(\"\\d*\"\\);.*"
 				+ ".*var colormode = (?<colorMode>\\d*);";
 
 		Pattern pattern = Pattern.compile(".*" + stringPattern + ".*", Pattern.DOTALL);
 
 		Matcher m = pattern.matcher(html);
+
 		if (m.matches()) {
 			JobDetail j = new JobDetail();
 

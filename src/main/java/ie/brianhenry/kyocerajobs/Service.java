@@ -1,7 +1,6 @@
 package ie.brianhenry.kyocerajobs;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -11,7 +10,6 @@ import java.util.List;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -46,6 +44,7 @@ public class Service {
 	CloseableHttpClient client;
 
 	{
+		// Set up HttpClient to ignore SSL warnings
 		TrustStrategy trustStrategy = new TrustStrategy() {
 			@Override
 			public boolean isTrusted(X509Certificate[] chain, String authType) {
