@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.config.Registry;
@@ -25,24 +26,26 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ServiceTest {
+public class PrinterTest {
 
-	Service service;
+	Printer service;
 
 	@Before
 	public void setUp() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
-		service = new Service();
+		service = new Printer("87.35.237.21");
 
 	}
 
 	@Test
 	public void loginTest() throws ClientProtocolException, IOException {
-
-		CloseableHttpResponse response = service.login();
+		String username = "Admin";
+		String password = "Admin";
+		CloseableHttpResponse response = service.login(username, password);
 
 		assertEquals(200, response.getStatusLine().getStatusCode());
 
@@ -64,6 +67,39 @@ public class ServiceTest {
 		assertEquals(1, j.getOriginalPages());
 		assertEquals(1, j.getCopies());
 		assertEquals(1, j.getPrintedPages());
+
+	}
+
+	@Test
+	public void getRecentJobsTest() throws ClientProtocolException, IOException {
+		int pageNumber = 1;
+		JobDetail[] jobs = service.getRecentJobs(pageNumber);
+		assertEquals(10, jobs.length);
+	}
+
+	@Test
+	public void parseJobsPageShortTest() throws IOException {
+
+		String shortString = "JobKey[Index] = \"11\"; sdasdfsadf JobKey[Index] = \"12\"; asfdasdf asd JobKey[Index] = \"13\"; asdfsad fJobKey[Index] = \"14\"; asdfasdfasdfasdfsad fJobKey[Index] = \"15\"; sdasdfsadf JobKey[Index] = \"16\"; asfdasdf asd JobKey[Index] = \"17\"; asdfsad fJobKey[Index] = \"18\"; asdfasdfasdfasdfsad fJobKey[Index] = \"19\"; asdfasdfasdfJobKeyasdfasdfasdfJobKey[Index] = \"20\"; ";
+
+		int[] shortNumbers = { 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
+
+		int[] shortJobs = service.parseJobsListHtml(shortString);
+
+		Assert.assertArrayEquals(shortNumbers, shortJobs);
+
+	}
+
+	@Test
+	public void parseJobsPageFullTest() throws IOException {
+
+		String jobListHtml = IOUtils.toString(this.getClass().getResourceAsStream("jobs.html"), "UTF-8");
+
+		int[] jobNumbers = { 2885, 2884, 2883, 2882, 2881, 2880, 2879, 2878, 2877, 2876 };
+
+		int[] parsedJobs = service.parseJobsListHtml(jobListHtml);
+
+		Assert.assertArrayEquals(jobNumbers, parsedJobs);
 
 	}
 

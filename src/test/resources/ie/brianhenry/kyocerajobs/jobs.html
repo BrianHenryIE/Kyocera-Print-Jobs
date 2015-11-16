@@ -1,0 +1,448 @@
+<!------------------------------------------------------------------------->
+<!-- Copyright (C) 2011 KYOCERA MITA Corporation.                        -->
+<!-- All rights reserved.                                                -->
+<!------------------------------------------------------------------------->
+<html dir="ltr">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<title>Kyocera</title>
+
+<script language="JavaScript" type="text/javascript" src="../js/jsallWLM.js"></script>
+<link rel="stylesheet" href="../css/mainBase.css">
+<script language="JavaScript" type="text/javascript">
+SelectLang(parent.lang);
+var arrayToken = Array("JobSts_PrnJobLog_PrnJobs.htm",1,0,"");
+
+
+parent.currentpage = "../job/JobSts_PrnJobLog_PrnJobs.htm?arg1=3&arg2=3&arg3=1&arg7=1";
+var FileNames = Array( "JobSts_PrnJobLog_PrnJob_WklyDtl.htm" );
+var ifaxinstall = "Not Installed";
+var FaxCardSuppor = "Not Installed";
+function reloadIframebox(sVal,accountid) {
+var lastHTMLdevice = "JobSts_PrnJobLog_PrnJob_WklyDtl.htm";
+var straddrType= document.form1.addrType.options[document.form1.addrType.selectedIndex].text;
+if(straddrType == mes[251])
+straddrType = 1;
+else if(straddrType == mes[252])
+straddrType = 2;
+else if(straddrType == mes[45])
+straddrType = 3;
+else if(straddrType == mes[253])
+straddrType = 4;
+else if(straddrType == mes[254])
+straddrType = 5;
+else if(straddrType == mes[47])
+straddrType = 6;
+else if(straddrType == mes[255])
+straddrType = 7;
+else if(straddrType == mes[256])
+straddrType = 8;
+else if(straddrType == mes[257])
+straddrType = 9;
+else if(straddrType == mes[279])
+straddrType = 10;
+
+var hrefSource = '../job/' + lastHTMLdevice + "?arg1=3&arg2=1&arg3=" + sVal+ "&arg4=" + straddrType;
+
+var iframeSourceJobStatus = '<iframe id="printingjobstatus" name ="printingjobstatus" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="0" onload="resizeFrame(this)"; height:0px;  src="'+hrefSource+'" >You need an iframes capable browser to view this content.</iframe>';
+parent.iframeSourceJobStatus = iframeSourceJobStatus;
+flgCustom = "2";
+if(parent.document.getElementById('lbldivid') != null){
+parent.document.getElementById('lbldivid').innerHTML = "<table><tr><td>>&nbsp;<u><a>" + mes[27] + " :  " + mes[264] + " " + mes[27] + "</a></u></td></tr></table>";
+}
+if(parent.document.getElementById('lblTitleid') != null){
+parent.document.getElementById('lblTitleid').innerHTML = "Job Detail";
+}
+if(parent.document.getElementById('docustomdown') != null){
+parent.document.getElementById('docustomdown').style.display = 'none';
+}
+
+if(parent.document.getElementById('hiddValue') != null){
+parent.document.getElementById('hiddValue').value = "printingjobstatus";
+}
+
+var curDivObj = getObj("s22");
+if(curDivObj != null){
+curDivObj.style.display = 'block';
+}
+if(parent.document.getElementById('deviceid') != null){
+parent.document.getElementById('deviceid').innerHTML = iframeSourceJobStatus;
+}
+}
+
+function addbreaks2(inputstr, linelength)
+{
+var strpos = 0;
+var tmpstr = "";
+var counter = 0;
+var linemax = 0;
+if (addbreaks2.arguments.length == 2)
+{ var linesm = linelength;}
+else
+{ var linesm = 32;}
+var linelg = linesm + 4;
+while (strpos < inputstr.length)
+{
+counter = 0;
+for (var q = strpos; q < inputstr.length; q++)
+{
+counter++;
+if (q > strpos + linelg) {break}
+}
+if (strpos == 0)
+{
+if (counter > linesm && counter < linelg) {linemax = counter;}
+else {linemax = linesm;}
+}
+if (counter <= linemax)
+{
+for (var z = strpos; z < strpos + counter; z++)
+{
+tmpstr = tmpstr + inputstr.charAt(z);
+}
+strpos = q;
+}
+else
+{
+for (var z = strpos; z < strpos + linemax; z++)
+{
+tmpstr = tmpstr + inputstr.charAt(z);
+}
+tmpstr = tmpstr + '<br>';
+//tmpstr = tmpstr + '<font color="#ff0000">&#8212<br></font>';
+strpos = strpos + linemax;
+}
+}
+return(tmpstr);
+}
+
+function checkOnLoadBox1()
+{
+var agt = navigator.userAgent.toLowerCase();
+if (agt.indexOf("safari") != -1) {
+var curDivObj = getObj("submenu");
+if(curDivObj != null){
+curDivObj.style.display = 'none';
+}
+
+} else {
+if(window.parent.login.document.getElementById('s6') != null){
+//		var curDivObj = window.parent.login.document.getElementById('s6');
+//		curDivObj.style.display = 'block';
+}
+//
+//
+//		var curDivObj = window.parent.login.document.getElementById('s24');
+//		curDivObj.style.display= 'none';
+//		var curDivObj = window.parent.login.document.getElementById('s23');
+//		curDivObj.style.display = 'none';
+//		if(parent.currentPage == '') {
+//			var curDivObj = window.parent.login.document.getElementById('s22');
+//			curDivObj.style.display = 'none';
+}
+
+/*var curDivObj = getObj("s37");
+curDivObj.style.display= 'none';
+var curDivObj = getObj("s36");
+curDivObj.style.display= 'none';
+var curDivObj = getObj("s38");
+curDivObj.style.display = 'none';*/
+}
+
+
+function SerJump()
+{
+//	location.href = arrayToken[0] + "?" + setArg(Array(1,0,encodeURI(document.forms[0].searchw.value)));
+location.href = arrayToken[0] + "?" + setArg(Array(1,0,encodeURIComponent(document.forms[0].searchw.value)));
+return false;
+}
+
+function checkOnLoadBox()
+{
+/*
+parent.document.getElementById('panelusaged').style.display = 'none';
+parent.document.getElementById('paperid').style.display = 'none';
+parent.document.getElementById('tonerid').style.display ='none' ;
+parent.document.getElementById('stapleid').style.display = 'none';
+*/
+
+var LastUpdate = "2015/11/16 12:44:30";
+
+//parent.document.getElementById('leftcoldiv').className = "navilayer2";
+
+
+var addr = "../job/JobSts_PrnJobLog_PrnJobs.htm?arg1=3&arg2=3&arg3=1&arg7=1";
+
+var a = checkPage1(addr,"","","","",mes[27] + " :<br> " + mes[36],"","","","","","","",LastUpdate,"","");
+
+if(parent.document.getElementById('docustomdown') != null){
+parent.document.getElementById('docustomdown').style.display = 'none';
+}
+if(parent.document.getElementById('maindivindex') != null){
+parent.document.getElementById('maindivindex').style.height = '1100px';
+}
+if(parent.document.getElementById('main') != null){
+parent.document.getElementById('main').style.height = '1200px';
+}
+if(document.getElementById('docustom1') != null)
+document.getElementById('docustom1').style.display = '';
+if(document.getElementById('docustom') != null)
+document.getElementById('docustom').style.display = 'none';
+
+if(parent.document.getElementById('docustom1') != null)
+parent.document.getElementById('docustom1').style.display = '';
+if(parent.document.getElementById('docustom') != null)
+parent.document.getElementById('docustom').style.display = 'none';
+
+}
+function getChangeValue(selectobj){
+var changedvaltmp = selectobj.value;
+
+if( FaxCardSuppor == "Installed" && ifaxinstall != "Installed" && changedvaltmp == 7){
+changedvaltmp = 8;
+}else if( FaxCardSuppor == "Installed" && ifaxinstall != "Installed" && changedvaltmp == 8){
+changedvaltmp = 9;
+}else if( FaxCardSuppor != "Installed" && changedvaltmp == 7){
+changedvaltmp = 9;
+}else if( FaxCardSuppor != "Installed" && changedvaltmp == 6){
+changedvaltmp = 8;
+}else if( FaxCardSuppor != "Installed" && changedvaltmp == 8){
+changedvaltmp = 10;
+}
+var hrefSource = "../job/JobSts_PrnJobLog_PrnJobs.htm?arg1=3&arg2=3&arg3=1&arg7="+changedvaltmp;
+
+var iframeSourceJobStatus = '<iframe id="printingjobstatus" name ="printingjobstatus" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="0" onload="resizeFrame(this)"; height:0px;  src="'+hrefSource+'" >You need an iframes capable browser to view this content.</iframe>';
+parent.iframeSourceJobStatus = iframeSourceJobStatus;
+flgCustom = "2";
+
+var curDivObj = getObj("s22");
+if(curDivObj != null){
+curDivObj.style.display = 'block';
+}
+if(parent.document.getElementById('deviceid') != null){
+parent.document.getElementById('deviceid').innerHTML = iframeSourceJobStatus;
+}
+}
+
+
+</script>
+</head>
+<body id="rightfrm" onload="checkOnLoadBox()">
+<form name="form1" onSubmit="return SerJump()">
+
+<script language="JavaScript">
+
+document.write('<div id="contentcustom">');
+var JobSelNumber = Array();
+var JobTime = Array();
+var netcont = 5;
+var selectionval = "1";
+
+var cmbPrintingType = Array();
+cmbPrintingType[0] = mes[251];
+cmbPrintingType[1] = mes[252];
+cmbPrintingType[2] = mes[45];
+cmbPrintingType[3] = mes[253];
+cmbPrintingType[4] = mes[254];
+
+if(FaxCardSuppor == "Installed") {
+cmbPrintingType[netcont] = mes[47];
+netcont++;
+}
+if(ifaxinstall == "Installed"){
+cmbPrintingType[netcont] = mes[255];
+netcont++;
+}
+cmbPrintingType[netcont] = mes[256];
+netcont++;
+cmbPrintingType[netcont] = mes[257];
+netcont++;
+cmbPrintingType[netcont] = mes[279];
+if( FaxCardSuppor == "Installed" && ifaxinstall != "Installed" && selectionval == 8){
+selectionval = 7;
+}else if( FaxCardSuppor == "Installed" && ifaxinstall != "Installed" && selectionval == 9){
+selectionval = 8;
+}else if( FaxCardSuppor == "Installed" && ifaxinstall != "Installed" && selectionval == 10){
+selectionval = 8;
+}else if( FaxCardSuppor != "Installed" && selectionval == 8){
+selectionval = 6;
+}else if( FaxCardSuppor != "Installed" && selectionval == 9){
+selectionval = 7;
+}else if( FaxCardSuppor != "Installed" && selectionval == 10){
+selectionval = 8;
+}
+
+var JobType = Array();
+var JobName = Array();
+var JobUser = Array();
+var JobStatusPrint = Array();
+
+var JobKey = Array();
+var JobUsername = Array();
+var JobLogFlag = "_JobLog";
+var searchResult = 0;
+var Jobdetailline = "printjobslog";
+
+var h_getAbpListCount = "10";
+var h_getAbpTotalCount = h_getAbpListCount;
+Index = 0;
+JobKey[Index] = "2885";
+JobSelNumber[Index] = "002885";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00288520151116121252";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 12:13";
+Index = 1;
+JobKey[Index] = "2884";
+JobSelNumber[Index] = "002884";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00288420151116121207";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 12:12";
+Index = 2;
+JobKey[Index] = "2883";
+JobSelNumber[Index] = "002883";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00288320151116121114";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 12:11";
+Index = 3;
+JobKey[Index] = "2882";
+JobSelNumber[Index] = "002882";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00288220151116120821";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 12:09";
+Index = 4;
+JobKey[Index] = "2881";
+JobSelNumber[Index] = "002881";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00288120151116120439";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 12:05";
+Index = 5;
+JobKey[Index] = "2880";
+JobSelNumber[Index] = "002880";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00288020151116115816";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 11:59";
+Index = 6;
+JobKey[Index] = "2879";
+JobSelNumber[Index] = "002879";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00287920151116115517";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 11:55";
+Index = 7;
+JobKey[Index] = "2878";
+JobSelNumber[Index] = "002878";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00287820151116115111";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 11:51";
+Index = 8;
+JobKey[Index] = "2877";
+JobSelNumber[Index] = "002877";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00287720151116112300";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 11:23";
+Index = 9;
+JobKey[Index] = "2876";
+JobSelNumber[Index] = "002876";
+JobUsername[Index] = "";
+//if (JobUsername[Index].length > 20)
+//{JobUsername[Index] = wrapName(JobUsername[Index], 20);}
+JobStatusPrint[Index] = sJobStatus[5];
+var jobStatus = 1;
+JobType[Index] = Current_JobStatus[jobStatus];
+JobName[Index] = "doc00287620151116112015";
+//if (JobName[Index].length > 20)
+//{JobName[Index] = wrapName(JobName[Index], 20);}
+JobTime[Index] = "11/16 11:20";
+
+var searchWord = decodeURIComponent(arrayToken[3]);
+var strResult = AddResultWords(currentPage, JobSelNumber.length, searchResult, searchWord);
+var currentPage = arrayToken[1];
+var totalPage = Math.ceil(searchResult / 10);
+var totaljobcount = 100;
+var nLinkNum = Math.ceil(totaljobcount/10);
+var frontArg = "";
+var rearArg = arrayToken.slice(2, 4);
+var stsjoblog = "log_all_user";
+var h_usertype = "Unknown";
+var h_loginusername  = "_invalid_cert_id";
+
+var docbox = Add8ColPrintingJobsMatrixCommon(mes[250], JobSelNumber, mes[259], JobTime, mes[271], JobType, mes[62],
+JobName, mes[262], JobUsername, mes[50], JobStatusPrint, mes[272], h_getAbpListCount, mes[260], cmbPrintingType,JobKey,JobLogFlag, selectionval,"",Jobdetailline,stsjoblog,h_usertype,h_loginusername);
+
+
+//AddPrevNextLink(docbox, true, currentPage, totalPage, arrayToken[0], frontArg, rearArg,"",h_getAbpListCount,h_getAbpTotalCount,"","Jobs");
+
+AddPrevNextLinkJobs(docbox,true, 1, nLinkNum, arrayToken[0], Array(3, 3), "","1",h_getAbpListCount,totaljobcount);
+document.write('</div>');
+
+
+
+</script>
+</div>
+</form>
+</body>
+</html>

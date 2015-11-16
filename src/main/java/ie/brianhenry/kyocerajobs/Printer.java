@@ -7,6 +7,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLContext;
 
@@ -30,15 +32,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 
-public class Service {
+public class Printer {
 
-	String printerIp = "87.35.237.21";
-	String username = "Admin";
-	String password = "Admin";
+	String printerIp;
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	Printer(String printerIp) {
+		this.printerIp = printerIp;
 	}
 
 	CloseableHttpClient client;
@@ -70,7 +69,7 @@ public class Service {
 		client = HttpClients.custom().setSSLContext(sslContext).setConnectionManager(connectionManager).build();
 	}
 
-	public CloseableHttpResponse login() throws ClientProtocolException, IOException {
+	public CloseableHttpResponse login(String username, String password) throws ClientProtocolException, IOException {
 
 		// Login!
 		HttpPost httpPost = new HttpPost("https://" + printerIp + "/startwlm/login.cgi");
@@ -100,14 +99,57 @@ public class Service {
 
 	public JobDetail getJob(int jobNumber) throws ClientProtocolException, IOException {
 
-		HttpGet httpGet = new HttpGet(
-				"https://"+printerIp+"/job/JobSts_PrnJobLog_PrnJob_WklyDtl.htm?arg1=3&arg2=1&arg3="+jobNumber+"&arg4=1");
+		HttpGet httpGet = new HttpGet("https://" + printerIp
+				+ "/job/JobSts_PrnJobLog_PrnJob_WklyDtl.htm?arg1=3&arg2=1&arg3=" + jobNumber + "&arg4=1");
 
 		CloseableHttpResponse response = client.execute(httpGet);
 
 		String bodyAsString = EntityUtils.toString(response.getEntity(), "UTF-8");
 
 		return JobDetail.fromHtml(bodyAsString);
+
+	}
+
+
+	public JobDetail[] getRecentJobs(int pageNumber) throws ClientProtocolException, IOException {
+
+		JobDetail[] jobDetails = new JobDetail[10];
+
+		HttpGet httpGet = new HttpGet("https://" + printerIp + "/job/JobSts_PrnJobLog_PrnJobs.htm?arg1=3&arg2=3&arg3="
+				+ pageNumber + "&arg7=1&arg7=1");
+
+		CloseableHttpResponse response = client.execute(httpGet);
+
+		String bodyAsString = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+		int jdIndex = 0;
+		for (int j :
+
+		parseJobsListHtml(bodyAsString)) {
+			jobDetails[jdIndex] = getJob(j);
+			jdIndex++;
+		}
+
+		return jobDetails;
+	}
+
+	int[] parseJobsListHtml(String jobListHtml) {
+
+		int[] jobs = new int[10];
+
+		String stringPattern = "JobKey\\[Index\\] = \"(\\d*)\";";
+
+		Pattern pattern = Pattern.compile(stringPattern, Pattern.DOTALL);
+
+		Matcher m = pattern.matcher(jobListHtml);
+
+		int jobsIndex = 0;
+		while (m.find()) {
+			jobs[jobsIndex] = Integer.parseInt(m.group(1));
+			jobsIndex++;
+		}
+
+		return jobs;
 
 	}
 
