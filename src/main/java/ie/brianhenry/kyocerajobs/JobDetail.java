@@ -55,10 +55,10 @@ public class JobDetail {
 	private int printedPages;
 	private String colorMode;
 
-	private JobDetail() {
+	public JobDetail() {
 	}
 
-	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 
 	static JobDetail fromHtml(String html) {
 
@@ -139,5 +139,48 @@ public class JobDetail {
 	public String getColorMode() {
 		return colorMode;
 	}
+
+	public void setJobType(int jobType) {
+		this.jobType = jobType;
+	}
+
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setConnectedTo(String connectedTo) {
+		this.connectedTo = connectedTo;
+	}
+
+	public void setAcceptedTime(LocalDateTime acceptedTime) {
+		this.acceptedTime = acceptedTime;
+	}
+
+	public void setEndTime(LocalDateTime endTime) {
+		this.endTime = endTime;
+	}
+
+	public void setOriginalPages(int originalPages) {
+		this.originalPages = originalPages;
+	}
+
+	public void setCopies(int copies) {
+		this.copies = copies;
+	}
+
+	public void setPrintedPages(int printedPages) {
+		this.printedPages = printedPages;
+	}
+
+	public void setColorMode(String colorMode) {
+		this.colorMode = colorMode;
+	}
+	
+	
+	
 
 }
