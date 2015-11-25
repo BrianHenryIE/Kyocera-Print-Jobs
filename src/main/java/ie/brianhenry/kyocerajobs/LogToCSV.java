@@ -85,31 +85,26 @@ public class LogToCSV {
 	}
 
 	private static final DateTimeFormatter csvDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-	
+
 	List<JobDetail> readCSV(InputStream inputStream) {
 
-		CsvToBean<JobDetail> csvToBean = new CsvToBean<JobDetail>(){
+		// Override to parse dates properly
+		CsvToBean<JobDetail> csvToBean = new CsvToBean<JobDetail>() {
 
-		    @Override
-		    protected Object convertValue(String value, PropertyDescriptor prop) throws InstantiationException,IllegalAccessException {
+			@Override
+			protected Object convertValue(String value, PropertyDescriptor prop)
+					throws InstantiationException, IllegalAccessException {
 
-		        if (prop.getName().equals("acceptedTime") || prop.getName().equals("endTime")) {
-		            // return an custom object based on the incoming value
-		        	 
-		            return LocalDateTime.parse(value, csvDateFormatter);
-		        }
+				if (prop.getName().equals("acceptedTime") || prop.getName().equals("endTime"))
+					return LocalDateTime.parse(value, csvDateFormatter);
 
-		        return super.convertValue(value, prop);
-		    }
+				return super.convertValue(value, prop);
+			}
 		};
-		
+
 		CSVReader reader = new CSVReader(new InputStreamReader(inputStream), CSVParser.DEFAULT_SEPARATOR,
 				CSVParser.DEFAULT_QUOTE_CHARACTER, 1);
-//		CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
-		
-		
-		
-		//List<JobDetail> list = csvToBean.parse(headerStrategy, reader);
+
 		List<JobDetail> list = csvToBean.parse(positionStrategy, reader);
 
 		return list;

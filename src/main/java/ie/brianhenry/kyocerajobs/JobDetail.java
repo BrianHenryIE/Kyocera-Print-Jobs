@@ -60,7 +60,6 @@ public class JobDetail {
 	}
 
 	private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-	
 
 	static JobDetail fromHtml(String html) {
 
@@ -166,7 +165,6 @@ public class JobDetail {
 		this.endTime = endTime;
 	}
 
-
 	public void setOriginalPages(int originalPages) {
 		this.originalPages = originalPages;
 	}
@@ -182,8 +180,5 @@ public class JobDetail {
 	public void setColorMode(String colorMode) {
 		this.colorMode = colorMode;
 	}
-	
-	
-	
 
 }

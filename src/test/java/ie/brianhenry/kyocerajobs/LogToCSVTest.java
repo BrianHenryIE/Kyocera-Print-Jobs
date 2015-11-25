@@ -13,8 +13,6 @@ public class LogToCSVTest {
 
 	LogToCSV l2csv = new LogToCSV();
 
-	// jobType,jobName,userName,connectedTo,acceptedTime,endTime,originalPages,copies,printedPages,colorMode;
-
 	@Test
 	public void readCsvTest() {
 
@@ -48,5 +46,6 @@ public class LogToCSVTest {
 
 		l2csv.write(jobs, filename);
 
+		// TODO An assert and cleanup
 	}
 }
