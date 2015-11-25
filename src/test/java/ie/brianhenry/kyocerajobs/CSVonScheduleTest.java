@@ -2,6 +2,7 @@ package ie.brianhenry.kyocerajobs;
 
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.junit.Test;
@@ -36,8 +37,11 @@ public class CSVonScheduleTest {
 	}
 
 	@Test
-	public void getLastSavedJobTest() {
+	public void getLastSavedJobTest() throws FileNotFoundException {
 
+		JobDetail lastJob = service.getLastSavedJob(folderPath, printerName);
+		
+		assertEquals(1635, lastJob.getJobNumber());
 	}
 
 	@Test
@@ -49,5 +53,7 @@ public class CSVonScheduleTest {
 	public void saveNewJobsByDateTest() {
 
 	}
+	
+	// TODO Teardown
 
 }

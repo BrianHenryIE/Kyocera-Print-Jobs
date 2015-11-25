@@ -1,12 +1,12 @@
 package ie.brianhenry.kyocerajobs;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 public class CSVonSchedule {
@@ -67,6 +67,16 @@ public class CSVonSchedule {
 					filenameDateFormatter), name);
 
 		return orderedLogFiles.lastEntry().getValue();
+	}
+
+	public JobDetail getLastSavedJob(String folderPath, String printerName) throws FileNotFoundException {
+		
+		String filename = getMostRecentLogFileName(folderPath, printerName);
+		JobDetailCSV file = new JobDetailCSV(folderPath + filename);
+		
+		List<JobDetail> jobs = file.readCSV();
+		
+		return jobs.get(jobs.size()-1);
 	}
 
 }
