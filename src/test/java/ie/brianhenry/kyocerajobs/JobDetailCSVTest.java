@@ -26,9 +26,9 @@ public class JobDetailCSVTest {
 
 		assertEquals(3, joblog.size());
 
-		assertEquals("doc0", joblog.get(0).getJobName());
-		assertEquals("doc1", joblog.get(1).getJobName());
-		assertEquals("doc2", joblog.get(2).getJobName());
+		assertEquals(1635, joblog.get(0).getJobNumber());
+		assertEquals(1635, joblog.get(1).getJobNumber());
+		assertEquals(1635, joblog.get(2).getJobNumber());
 	}
 
 	@Test

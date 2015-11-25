@@ -32,11 +32,12 @@ public class JobDetailCSV {
 
 		positionStrategy.setType(JobDetail.class);
 
-		String[] columns = new String[] { "jobType", "jobName", "userName", "connectedTo", "acceptedTime", "endTime",
+		String[] columns = new String[] { "jobNumber", "jobType", "jobName", "userName", "connectedTo", "acceptedTime", "endTime",
 				"originalPages", "copies", "printedPages", "colorMode" };
 		positionStrategy.setColumnMapping(columns);
 
 		Map<String, String> columnMapping = new HashMap<String, String>();
+		columnMapping.put("jobNumber", "jobNumber");
 		columnMapping.put("jobType", "jobType");
 		columnMapping.put("jobName", "jobName");
 		columnMapping.put("userName", "userName");
