@@ -17,20 +17,19 @@ public class JobDetailTest {
 
 		JobDetail j = JobDetail.fromHtml(jobDetailHtml);
 
-		assertEquals(j.getJobType(), 1);
-		assertEquals(j.getJobName(), "doc00163520151014145654");
-		assertEquals(j.getUserName(), "");
-		assertEquals(j.getConnectedTo(), "connectedto");
-		assertEquals(j.getAcceptedTime(),
-				LocalDateTime.parse("2015/10/14 14:56", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")));
-		assertEquals(j.getEndTime(),
-				LocalDateTime.parse("2015/10/14 14:57", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")));
-		assertEquals(j.getOriginalPages(), 1);
-		assertEquals(j.getCopies(), 1);
-		assertEquals(j.getPrintedPages(), 1);
+		assertEquals(1, j.getJobType());
+		assertEquals("doc00163520151014145654", j.getJobName());
+		assertEquals("", j.getUserName());
+		assertEquals("connectedto", j.getConnectedTo());
+		assertEquals(LocalDateTime.parse("2015/10/14 14:56", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
+				j.getAcceptedTime());
+		assertEquals(LocalDateTime.parse("2015/10/14 14:57", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
+				j.getEndTime());
+		assertEquals(1, j.getOriginalPages());
+		assertEquals(1, j.getCopies());
+		assertEquals(1, j.getPrintedPages());
 
 	}
-	
 
 	@Test
 	public void testLongHtml() throws Exception {
@@ -39,17 +38,17 @@ public class JobDetailTest {
 
 		JobDetail j = JobDetail.fromHtml(jobDetailHtml);
 
-		assertEquals(j.getJobType(), 1);
-		assertEquals(j.getJobName(), "doc00163520151014145654");
-		assertEquals(j.getUserName(), "");
-		assertEquals(j.getConnectedTo(), "connectedto");
-		assertEquals(j.getAcceptedTime(),
-				LocalDateTime.parse("2015/10/14 14:56", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")));
-		assertEquals(j.getEndTime(),
-				LocalDateTime.parse("2015/10/14 14:57", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")));
-		assertEquals(j.getOriginalPages(), 1);
-		assertEquals(j.getCopies(), 1);
-		assertEquals(j.getPrintedPages(), 1);
+		assertEquals(1, j.getJobType());
+		assertEquals("doc00163520151014145654", j.getJobName());
+		assertEquals("", j.getUserName());
+		assertEquals("connectedto", j.getConnectedTo());
+		assertEquals(LocalDateTime.parse("2015/10/14 14:56", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
+				j.getAcceptedTime());
+		assertEquals(LocalDateTime.parse("2015/10/14 14:57", DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")),
+				j.getEndTime());
+		assertEquals(1, j.getOriginalPages());
+		assertEquals(1, j.getCopies());
+		assertEquals(1, j.getPrintedPages());
 
 	}
 
