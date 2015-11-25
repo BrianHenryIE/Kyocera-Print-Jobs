@@ -5,6 +5,7 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,12 +36,14 @@ import org.apache.http.util.EntityUtils;
 public class Printer {
 
 	String printerIp;
+	String printerName;
 
 	Printer(String printerIp) {
 		this.printerIp = printerIp;
 	}
 
 	CloseableHttpClient client;
+	private String printerModel;
 
 	{
 		// Set up HttpClient to ignore SSL warnings
@@ -110,7 +113,6 @@ public class Printer {
 
 	}
 
-
 	public JobDetail[] getRecentJobs(int pageNumber) throws ClientProtocolException, IOException {
 
 		JobDetail[] jobDetails = new JobDetail[10];
@@ -150,6 +152,44 @@ public class Printer {
 		}
 
 		return jobs;
+
+	}
+
+	public String getPrinterName() throws ClientProtocolException, IOException {
+
+		if (printerName == null)
+			parseStartWlm();
+		
+		return printerName;
+	}
+
+	private void parseStartWlm() throws ClientProtocolException, IOException {
+		HttpGet httpGet = new HttpGet("https://" + printerIp + "/startwlm/Start_Wlm.htm");
+
+		CloseableHttpResponse response = client.execute(httpGet);
+
+		String bodyAsString = EntityUtils.toString(response.getEntity(), "UTF-8");
+		parseStartWlm(bodyAsString);
+	}
+
+	public void parseStartWlm(String html) {
+		
+		String stringPattern = "HeaderStatusPC\\(\"(?<printerModel>.*?)\",\"(?<printerName>.*?)\",";
+
+		Pattern pattern = Pattern.compile(".*" + stringPattern + ".*", Pattern.DOTALL);
+
+		Matcher m = pattern.matcher(html);
+
+		if (m.matches()) {
+
+			printerModel = m.group("printerModel");
+			printerName = m.group("printerName");
+			
+		} else {
+			// throw exception
+			System.out.println("no match: parseStartWlm");
+
+		}
 
 	}
 

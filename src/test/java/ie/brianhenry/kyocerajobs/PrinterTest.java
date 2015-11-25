@@ -32,12 +32,12 @@ import org.junit.Test;
 
 public class PrinterTest {
 
-	Printer service;
+	Printer printer;
 
 	@Before
 	public void setUp() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
-		service = new Printer("87.35.237.21");
+		printer = new Printer("87.35.237.21");
 
 	}
 
@@ -45,7 +45,7 @@ public class PrinterTest {
 	public void loginTest() throws ClientProtocolException, IOException {
 		String username = "Admin";
 		String password = "Admin";
-		CloseableHttpResponse response = service.login(username, password);
+		CloseableHttpResponse response = printer.login(username, password);
 
 		assertEquals(200, response.getStatusLine().getStatusCode());
 
@@ -54,7 +54,7 @@ public class PrinterTest {
 	@Test
 	public void getJobTest() throws ClientProtocolException, IOException {
 
-		JobDetail j = service.getJob(1635);
+		JobDetail j = printer.getJob(1635);
 
 		assertEquals(1, j.getJobType());
 		assertEquals("doc00163520151014145654", j.getJobName());
@@ -73,7 +73,7 @@ public class PrinterTest {
 	@Test
 	public void getRecentJobsTest() throws ClientProtocolException, IOException {
 		int pageNumber = 1;
-		JobDetail[] jobs = service.getRecentJobs(pageNumber);
+		JobDetail[] jobs = printer.getRecentJobs(pageNumber);
 		assertEquals(10, jobs.length);
 	}
 
@@ -84,7 +84,7 @@ public class PrinterTest {
 
 		int[] shortNumbers = { 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
 
-		int[] shortJobs = service.parseJobsListHtml(shortString);
+		int[] shortJobs = printer.parseJobsListHtml(shortString);
 
 		Assert.assertArrayEquals(shortNumbers, shortJobs);
 
@@ -97,9 +97,32 @@ public class PrinterTest {
 
 		int[] jobNumbers = { 2885, 2884, 2883, 2882, 2881, 2880, 2879, 2878, 2877, 2876 };
 
-		int[] parsedJobs = service.parseJobsListHtml(jobListHtml);
+		int[] parsedJobs = printer.parseJobsListHtml(jobListHtml);
 
 		Assert.assertArrayEquals(jobNumbers, parsedJobs);
+
+	}
+
+	@Test
+	public void getPrinterNameFromTextTest() throws IOException {
+
+		String startWlm = IOUtils.toString(this.getClass().getResourceAsStream("Start_Wlm.html"), "UTF-8");
+
+		Printer p = new Printer("1.2.3.4");
+
+		p.parseStartWlm(startWlm);
+
+		assertEquals("MainPhotocopier", p.getPrinterName());
+
+	}
+	
+
+	@Test
+	public void getPrinterNameLiveTest() throws IOException {
+
+		Printer p = new Printer("87.35.237.21");
+
+		assertEquals("MainPhotocopier", p.getPrinterName());
 
 	}
 
