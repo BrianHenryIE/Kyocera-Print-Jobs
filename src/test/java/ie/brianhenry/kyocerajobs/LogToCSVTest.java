@@ -18,12 +18,15 @@ public class LogToCSVTest {
 	@Test
 	public void readCsvTest() {
 
-		String filename = "generated.csv";
+		String filename = "readtest.csv";
 
 		List<JobDetail> joblog = l2csv.readCSV(this.getClass().getResourceAsStream(filename));
-		
+			
 		assertEquals(3, joblog.size());
 
+		assertEquals("doc0", joblog.get(0).getJobName());
+		assertEquals("doc1", joblog.get(1).getJobName());
+		assertEquals("doc2", joblog.get(2).getJobName());
 	}
 
 	@Test

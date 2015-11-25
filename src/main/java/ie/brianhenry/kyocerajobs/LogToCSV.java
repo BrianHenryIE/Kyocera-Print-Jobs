@@ -1,11 +1,16 @@
 package ie.brianhenry.kyocerajobs;
 
+import java.beans.PropertyDescriptor;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -15,6 +20,7 @@ import com.opencsv.CSVWriter;
 import com.opencsv.bean.BeanToCsv;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
 public class LogToCSV {
 
@@ -50,48 +56,65 @@ public class LogToCSV {
 
 	}
 
-	ColumnPositionMappingStrategy<JobDetail> strategy;
+	ColumnPositionMappingStrategy<JobDetail> positionStrategy = new ColumnPositionMappingStrategy<JobDetail>();
+	HeaderColumnNameTranslateMappingStrategy<JobDetail> headerStrategy = new HeaderColumnNameTranslateMappingStrategy<JobDetail>();
 
 	{
-		strategy = new ColumnPositionMappingStrategy<JobDetail>();
-		strategy.setType(JobDetail.class);
+
+		positionStrategy.setType(JobDetail.class);
 
 		String[] columns = new String[] { "jobType", "jobName", "userName", "connectedTo", "acceptedTime", "endTime",
 				"originalPages", "copies", "printedPages", "colorMode" };
-		strategy.setColumnMapping(columns);
-		
+		positionStrategy.setColumnMapping(columns);
+
+		Map<String, String> columnMapping = new HashMap<String, String>();
+		columnMapping.put("jobType", "jobType");
+		columnMapping.put("jobName", "jobName");
+		columnMapping.put("userName", "userName");
+		columnMapping.put("connectedTo", "connectedTo");
+		columnMapping.put("acceptedTime", "acceptedTime");
+		columnMapping.put("endTime", "endTime");
+		columnMapping.put("originalPages", "originalPages");
+		columnMapping.put("copies", "copies");
+		columnMapping.put("printedPages", "printedPages");
+		columnMapping.put("colorMode", "colorMode");
+
+		headerStrategy.setType(JobDetail.class);
+		headerStrategy.setColumnMapping(columnMapping);
+
 	}
 
+	private static final DateTimeFormatter csvDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+	
 	List<JobDetail> readCSV(InputStream inputStream) {
 
-		CsvToBean<JobDetail> csvToBean = new CsvToBean<JobDetail>();
+		CsvToBean<JobDetail> csvToBean = new CsvToBean<JobDetail>(){
 
-		// Map<String, String> columnMapping = new HashMap<String, String>();
-		// columnMapping.put("jobType", "jobType");
-		// columnMapping.put("jobName", "jobName");
-		// columnMapping.put("userName", "userName");
-		// columnMapping.put("connectedTo", "connectedTo");
-		// columnMapping.put("acceptedTime", "acceptedTime");
-		// columnMapping.put("endTime", "endTime");
-		// columnMapping.put("originalPages", "originalPages");
-		// columnMapping.put("copies", "copies");
-		// columnMapping.put("printedPages", "printedPages");
-		// columnMapping.put("colorMode", "colorMode");
+		    @Override
+		    protected Object convertValue(String value, PropertyDescriptor prop) throws InstantiationException,IllegalAccessException {
 
-		// HeaderColumnNameTranslateMappingStrategy<JobDetail> strategy = new
-		// HeaderColumnNameTranslateMappingStrategy<JobDetail>();
-		// //strategy.setType(JobDetail.class);
-		// strategy.setColumnMapping(columnMapping);
-		//
+		        if (prop.getName().equals("acceptedTime") || prop.getName().equals("endTime")) {
+		            // return an custom object based on the incoming value
+		        	 
+		            return LocalDateTime.parse(value, csvDateFormatter);
+		        }
 
-		CSVReader reader = new CSVReader(new InputStreamReader(inputStream), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_QUOTE_CHARACTER, 1);
+		        return super.convertValue(value, prop);
+		    }
+		};
 		
-		List<JobDetail> list = csvToBean.parse(strategy, reader);
+		CSVReader reader = new CSVReader(new InputStreamReader(inputStream), CSVParser.DEFAULT_SEPARATOR,
+				CSVParser.DEFAULT_QUOTE_CHARACTER, 1);
+//		CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
+		
+		
+		
+		//List<JobDetail> list = csvToBean.parse(headerStrategy, reader);
+		List<JobDetail> list = csvToBean.parse(positionStrategy, reader);
 
 		return list;
 
 	}
-
 
 	public void write(List<JobDetail> jobs, String filename) throws IOException {
 
@@ -101,7 +124,7 @@ public class LogToCSV {
 
 		CSVWriter writer = new CSVWriter(fw);
 
-		b2c.write(strategy, writer, jobs);
+		b2c.write(positionStrategy, writer, jobs);
 
 		fw.flush();
 		fw.close();

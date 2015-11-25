@@ -2,6 +2,7 @@ package ie.brianhenry.kyocerajobs;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,7 +59,8 @@ public class JobDetail {
 	public JobDetail() {
 	}
 
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+	private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+	
 
 	static JobDetail fromHtml(String html) {
 
@@ -81,8 +83,8 @@ public class JobDetail {
 			j.jobName = m.group("jobName");
 			j.userName = m.group("userName");
 			j.connectedTo = m.group("connectedTo");
-			j.acceptedTime = LocalDateTime.parse(m.group("acceptedTime"), formatter);
-			j.endTime = LocalDateTime.parse(m.group("endTime"), formatter);
+			j.acceptedTime = LocalDateTime.parse(m.group("acceptedTime"), htmlDateFormatter);
+			j.endTime = LocalDateTime.parse(m.group("endTime"), htmlDateFormatter);
 			j.originalPages = Integer.parseInt(m.group("originalPages"));
 			// TODO currently just pulls the first number from "15/15"
 			j.copies = Integer.parseInt(m.group("copies"));
@@ -163,6 +165,7 @@ public class JobDetail {
 	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
 	}
+
 
 	public void setOriginalPages(int originalPages) {
 		this.originalPages = originalPages;
