@@ -44,6 +44,7 @@ JobDetail[9] = sJobColorMode[3]; – Black & White
 
 public class JobDetail {
 
+	private int jobNumber;
 	private int jobType;
 	private String jobName;
 	private String userName;
@@ -68,7 +69,7 @@ public class JobDetail {
 				+ "JobDetail\\[5\\] = \"(?<endTime>.*)\";.*" + "JobDetail\\[6\\] = \"(?<originalPages>\\d*)\";.*"
 				+ "JobDetail\\[7\\] = \"(?<copies>\\d*)\"\\+\"/\"\\+\"\\d*\";.*"
 				+ "JobDetail\\[8\\] = \"(?<printedPages>\\d*)\"\\+\"/\"\\+ Number\\(\"\\d*\"\\)\\*Number\\(\"\\d*\"\\);.*"
-				+ ".*var colormode = (?<colorMode>\\d*);";
+				+ ".*var colormode = (?<colorMode>\\d*);.*"+"var JobNumber = \"(?<jobNumber>\\d*)\"";
 
 		Pattern pattern = Pattern.compile(".*" + stringPattern + ".*", Pattern.DOTALL);
 
@@ -90,11 +91,12 @@ public class JobDetail {
 			// attempted.
 			j.printedPages = Integer.parseInt(m.group("printedPages"));
 			j.colorMode = m.group("colorMode");
+			j.jobNumber = Integer.parseInt(m.group("jobNumber"));
 
 			return j;
 		} else {
-			// throw exception
-			System.out.println("no match");
+			// TODO throw exception
+			System.out.println("no match: JobDetail fromHtml");
 			return null;
 		}
 
@@ -178,6 +180,14 @@ public class JobDetail {
 
 	public void setColorMode(String colorMode) {
 		this.colorMode = colorMode;
+	}
+
+	public int getJobNumber() {
+		return jobNumber;
+	}
+
+	public void setJobNumber(int jobNumber) {
+		this.jobNumber = jobNumber;
 	}
 
 }

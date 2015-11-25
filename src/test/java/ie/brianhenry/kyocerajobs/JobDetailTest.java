@@ -28,7 +28,7 @@ public class JobDetailTest {
 		assertEquals(1, j.getOriginalPages());
 		assertEquals(1, j.getCopies());
 		assertEquals(1, j.getPrintedPages());
-
+		assertEquals(1635, j.getJobNumber());
 	}
 
 	@Test
@@ -49,6 +49,7 @@ public class JobDetailTest {
 		assertEquals(1, j.getOriginalPages());
 		assertEquals(1, j.getCopies());
 		assertEquals(1, j.getPrintedPages());
+		assertEquals(1635, j.getJobNumber());
 
 	}
 
