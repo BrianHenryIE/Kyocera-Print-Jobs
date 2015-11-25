@@ -1,7 +1,8 @@
 package ie.brianhenry.kyocerajobs;
 
 import java.beans.PropertyDescriptor;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.client.ClientProtocolException;
-
 import com.opencsv.CSVParser;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -22,40 +21,10 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
-public class LogToCSV {
+public class JobDetailCSV {
 
-	public static void main(String[] args) throws ClientProtocolException, IOException {
-
-		String printerIp = "87.35.237.21";
-
-		String csvFile = "photocopierlogs.csv";
-
-		Printer photocopier = new Printer(printerIp);
-
-		// If file doesn't exist, create it
-
-		CSVReader reader = new CSVReader(new FileReader(csvFile));
-		List<String[]> myEntries = reader.readAll();
-		reader.close();
-
-		// Get last entry
-		String[] lastLog = myEntries.get(myEntries.size() - 1);
-
-		// Whatever index the job number will be
-		int lastLoggedJob = Integer.parseInt(lastLog[2]);
-
-		int pageNumber = 1;
-
-		photocopier.getRecentJobs(pageNumber);
-
-		CSVWriter writer = new CSVWriter(new FileWriter(csvFile), '\t');
-		// feed in your array (or convert your data to an array)
-		String[] entries = "first#second#third".split("#");
-		writer.writeNext(entries);
-		writer.close();
-
-	}
-
+	String filename;
+	
 	ColumnPositionMappingStrategy<JobDetail> positionStrategy = new ColumnPositionMappingStrategy<JobDetail>();
 	HeaderColumnNameTranslateMappingStrategy<JobDetail> headerStrategy = new HeaderColumnNameTranslateMappingStrategy<JobDetail>();
 
@@ -86,8 +55,14 @@ public class LogToCSV {
 
 	private static final DateTimeFormatter csvDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-	List<JobDetail> readCSV(InputStream inputStream) {
+	public JobDetailCSV(String csvFile) {
+		this.filename = csvFile;
+	}
 
+	List<JobDetail> readCSV() throws FileNotFoundException {
+	    
+		InputStream inputStream = new FileInputStream(filename);
+		
 		// Override to parse dates properly
 		CsvToBean<JobDetail> csvToBean = new CsvToBean<JobDetail>() {
 
@@ -111,7 +86,7 @@ public class LogToCSV {
 
 	}
 
-	public void write(List<JobDetail> jobs, String filename) throws IOException {
+	public void write(List<JobDetail> jobs) throws IOException {
 
 		BeanToCsv<JobDetail> b2c = new BeanToCsv<JobDetail>();
 

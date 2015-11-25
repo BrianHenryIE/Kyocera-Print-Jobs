@@ -2,24 +2,28 @@ package ie.brianhenry.kyocerajobs;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-public class LogToCSVTest {
-
-	LogToCSV l2csv = new LogToCSV();
+public class JobDetailCSVTest {
 
 	@Test
-	public void readCsvTest() {
+	public void readCsvTest() throws FileNotFoundException {
 
 		String filename = "readtest.csv";
 
-		List<JobDetail> joblog = l2csv.readCSV(this.getClass().getResourceAsStream(filename));
-			
+		URL filepath = this.getClass().getResource(filename);
+		
+		JobDetailCSV l2csv = new JobDetailCSV(filepath.toString().substring(5));
+
+		List<JobDetail> joblog = l2csv.readCSV();
+
 		assertEquals(3, joblog.size());
 
 		assertEquals("doc0", joblog.get(0).getJobName());
@@ -31,6 +35,8 @@ public class LogToCSVTest {
 	public void writeBeanToFileTest() throws IOException {
 
 		String filename = "./src/test/resources/logfile.csv";
+
+		JobDetailCSV l2csv = new JobDetailCSV(filename);
 
 		List<JobDetail> jobs = new ArrayList<JobDetail>();
 
@@ -44,7 +50,7 @@ public class LogToCSVTest {
 		jobs.add(job2);
 		jobs.add(job3);
 
-		l2csv.write(jobs, filename);
+		l2csv.write(jobs);
 
 		// TODO An assert and cleanup
 	}
