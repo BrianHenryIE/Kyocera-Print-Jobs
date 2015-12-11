@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import javax.net.ssl.SSLContext;
 
@@ -29,6 +30,8 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import ie.brianhenry.kyocerajobs.JobDetail.ParseJobException;
 
 public class PrinterTest {
 
@@ -52,7 +55,7 @@ public class PrinterTest {
 	}
 
 	@Test
-	public void getJobTest() throws ClientProtocolException, IOException {
+	public void getJobTest() throws ClientProtocolException, IOException, ParseJobException {
 
 		JobDetail j = printer.getJob(1635);
 
@@ -71,10 +74,10 @@ public class PrinterTest {
 	}
 
 	@Test
-	public void getRecentJobsTest() throws ClientProtocolException, IOException {
+	public void getRecentJobsTest() throws ClientProtocolException, IOException, ParseJobException {
 		int pageNumber = 1;
-		JobDetail[] jobs = printer.getRecentJobs(pageNumber);
-		assertEquals(10, jobs.length);
+		List<JobDetail> jobs = printer.getRecentJobs(pageNumber);
+		assertEquals(10, jobs.size());
 	}
 
 	@Test
@@ -115,7 +118,6 @@ public class PrinterTest {
 		assertEquals("MainPhotocopier", p.getPrinterName());
 
 	}
-	
 
 	@Test
 	public void getPrinterNameLiveTest() throws IOException {

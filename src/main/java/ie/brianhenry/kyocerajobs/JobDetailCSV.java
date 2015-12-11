@@ -21,6 +21,7 @@ import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.HeaderColumnNameTranslateMappingStrategy;
 
+@SuppressWarnings("deprecation")
 public class JobDetailCSV {
 
 	String filename;
@@ -29,7 +30,7 @@ public class JobDetailCSV {
 	HeaderColumnNameTranslateMappingStrategy<JobDetail> headerStrategy = new HeaderColumnNameTranslateMappingStrategy<JobDetail>();
 
 	{
-
+		// Not actually deprecated yet!
 		positionStrategy.setType(JobDetail.class);
 
 		String[] columns = new String[] { "jobNumber", "jobType", "jobName", "userName", "connectedTo", "acceptedTime", "endTime",
@@ -49,6 +50,7 @@ public class JobDetailCSV {
 		columnMapping.put("printedPages", "printedPages");
 		columnMapping.put("colorMode", "colorMode");
 
+		// Not actually deprecated yet!
 		headerStrategy.setType(JobDetail.class);
 		headerStrategy.setColumnMapping(columnMapping);
 

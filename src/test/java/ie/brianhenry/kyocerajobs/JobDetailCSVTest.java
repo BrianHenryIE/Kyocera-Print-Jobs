@@ -11,6 +11,8 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import ie.brianhenry.kyocerajobs.JobDetail.ParseJobException;
+
 public class JobDetailCSVTest {
 
 	@Test
@@ -32,7 +34,7 @@ public class JobDetailCSVTest {
 	}
 
 	@Test
-	public void writeBeanToFileTest() throws IOException {
+	public void writeBeanToFileTest() throws IOException, ParseJobException {
 
 		String filename = "./src/test/resources/logfile.csv";
 

@@ -5,7 +5,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -32,6 +31,8 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
+
+import ie.brianhenry.kyocerajobs.JobDetail.ParseJobException;
 
 public class Printer {
 
@@ -100,7 +101,7 @@ public class Printer {
 
 	}
 
-	public JobDetail getJob(int jobNumber) throws ClientProtocolException, IOException {
+	public JobDetail getJob(int jobNumber) throws ParseJobException, ClientProtocolException, IOException {
 
 		HttpGet httpGet = new HttpGet("https://" + printerIp
 				+ "/job/JobSts_PrnJobLog_PrnJob_WklyDtl.htm?arg1=3&arg2=1&arg3=" + jobNumber + "&arg4=1");
@@ -113,9 +114,20 @@ public class Printer {
 
 	}
 
-	public JobDetail[] getRecentJobs(int pageNumber) throws ClientProtocolException, IOException {
+	/**
+	 * Returns the job details for a page of ten jobs.
+	 * Index starts at 0
+	 * There are only 10? pages. For more jobs, use getRecentJobs()
+	 * 
+	 * @param pageNumber
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws ParseJobException
+	 */
+	public List<JobDetail> getRecentJobs(int pageNumber) throws ClientProtocolException, IOException, ParseJobException {
 
-		JobDetail[] jobDetails = new JobDetail[10];
+		List<JobDetail> jobDetails = new ArrayList<JobDetail>();
 
 		HttpGet httpGet = new HttpGet("https://" + printerIp + "/job/JobSts_PrnJobLog_PrnJobs.htm?arg1=3&arg2=3&arg3="
 				+ pageNumber + "&arg7=1&arg7=1");
@@ -124,13 +136,8 @@ public class Printer {
 
 		String bodyAsString = EntityUtils.toString(response.getEntity(), "UTF-8");
 
-		int jdIndex = 0;
-		for (int j :
-
-		parseJobsListHtml(bodyAsString)) {
-			jobDetails[jdIndex] = getJob(j);
-			jdIndex++;
-		}
+		for (int j : parseJobsListHtml(bodyAsString))
+			jobDetails.add(getJob(j));
 
 		return jobDetails;
 	}
@@ -159,8 +166,16 @@ public class Printer {
 
 		if (printerName == null)
 			parseStartWlm();
-		
+
 		return printerName;
+	}
+
+	public String getPrinterModel() throws ClientProtocolException, IOException {
+
+		if (printerModel == null)
+			parseStartWlm();
+
+		return printerModel;
 	}
 
 	private void parseStartWlm() throws ClientProtocolException, IOException {
@@ -173,7 +188,7 @@ public class Printer {
 	}
 
 	public void parseStartWlm(String html) {
-		
+
 		String stringPattern = "HeaderStatusPC\\(\"(?<printerModel>.*?)\",\"(?<printerName>.*?)\",";
 
 		Pattern pattern = Pattern.compile(".*" + stringPattern + ".*", Pattern.DOTALL);
@@ -184,7 +199,7 @@ public class Printer {
 
 			printerModel = m.group("printerModel");
 			printerName = m.group("printerName");
-			
+
 		} else {
 			// throw exception
 			System.out.println("no match: parseStartWlm");

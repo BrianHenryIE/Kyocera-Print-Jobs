@@ -61,7 +61,7 @@ public class JobDetail {
 
 	private static final DateTimeFormatter htmlDateFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 
-	static JobDetail fromHtml(String html) {
+	static JobDetail fromHtml(String html) throws ParseJobException {
 
 		String stringPattern = "JobDetail\\[0\\] = sJobType\\[\"(?<jobType>\\d+)\"\\];.*"
 				+ "JobDetail\\[1\\] = \"(?<jobName>.+?)\";.*" + "JobDetail\\[2\\] = \"(?<userName>.*)\";.*"
@@ -96,8 +96,12 @@ public class JobDetail {
 			return j;
 		} else {
 			// TODO throw exception
+			
+			System.out.println(html);
+			
 			System.out.println("no match: JobDetail fromHtml");
-			return null;
+			
+			throw new ParseJobException();
 		}
 
 	}
@@ -190,4 +194,5 @@ public class JobDetail {
 		this.jobNumber = jobNumber;
 	}
 
+	public static class ParseJobException extends Exception{}
 }
