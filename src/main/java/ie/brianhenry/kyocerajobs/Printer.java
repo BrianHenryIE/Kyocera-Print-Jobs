@@ -23,15 +23,15 @@ public class Printer {
 	String printerIp;
 	String printerName;
 
+	CloseableHttpClient client = CarelessHttpClient.client();
+	
+	private String printerModel;
+
 	Printer(String printerIp) {
 		this.printerIp = printerIp;
 	}
 
-	CloseableHttpClient client = CarelessHttpClient.client();
-	
-	private String printerModel;
-	
-	public CloseableHttpResponse login(String username, String password) throws ClientProtocolException, IOException {
+	CloseableHttpResponse login(String username, String password) throws ClientProtocolException, IOException {
 
 		// Login!
 		HttpPost httpPost = new HttpPost("https://" + printerIp + "/startwlm/login.cgi");
@@ -159,7 +159,7 @@ public class Printer {
 			printerName = m.group("printerName");
 
 		} else {
-			// throw exception
+			// TODO throw exception
 			System.out.println("no match: parseStartWlm");
 
 		}

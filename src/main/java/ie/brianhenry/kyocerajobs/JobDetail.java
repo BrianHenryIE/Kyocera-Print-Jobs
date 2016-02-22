@@ -69,7 +69,7 @@ public class JobDetail {
 				+ "JobDetail\\[5\\] = \"(?<endTime>.*)\";.*" + "JobDetail\\[6\\] = \"(?<originalPages>\\d*)\";.*"
 				+ "JobDetail\\[7\\] = \"(?<copies>\\d*)\"\\+\"/\"\\+\"\\d*\";.*"
 				+ "JobDetail\\[8\\] = \"(?<printedPages>\\d*)\"\\+\"/\"\\+ Number\\(\"\\d*\"\\)\\*Number\\(\"\\d*\"\\);.*"
-				+ ".*var colormode = (?<colorMode>\\d*);.*"+"var JobNumber = \"(?<jobNumber>\\d*)\"";
+				+ ".*var colormode = (?<colorMode>\\d*);.*" + "var JobNumber = \"(?<jobNumber>\\d*)\"";
 
 		Pattern pattern = Pattern.compile(".*" + stringPattern + ".*", Pattern.DOTALL);
 
@@ -95,12 +95,6 @@ public class JobDetail {
 
 			return j;
 		} else {
-			// TODO throw exception
-			
-			System.out.println(html);
-			
-			System.out.println("no match: JobDetail fromHtml");
-			
 			throw new ParseJobException(html);
 		}
 
@@ -194,19 +188,19 @@ public class JobDetail {
 		this.jobNumber = jobNumber;
 	}
 
-	public static class ParseJobException extends Exception{
+	public static class ParseJobException extends Exception {
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 8091738948801165677L;
-		
+
 		private final String html;
-		
-		public ParseJobException(String html){
+
+		public ParseJobException(String html) {
 			this.html = html;
 		}
-		
-		public String getHtml(){
+
+		public String getHtml() {
 			return html;
 		}
 	}

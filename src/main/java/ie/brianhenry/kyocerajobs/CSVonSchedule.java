@@ -26,18 +26,18 @@ import ie.brianhenry.kyocerajobs.JobDetail.ParseJobException;
 public class CSVonSchedule {
 
 	private String printerIp;
-	private String csvFolder;
+	String csvFolder;
 
-	private Printer photocopier;
+	private Printer printer;
 
 	public CSVonSchedule(String printerIp, String csvFolder) {
 		this.printerIp = printerIp;
 		this.csvFolder = csvFolder;
-		photocopier = new Printer(printerIp);
+		printer = new Printer(printerIp);
 	}
 
 	public void go() throws ClientProtocolException, IOException, ParseJobException {
-		saveNewJobsByDate(csvFolder, photocopier.getPrinterName());
+		saveNewJobsByDate(csvFolder, printer.getPrinterName());
 	}
 
 	public static void main(String[] args) throws ClientProtocolException, IOException, ParseJobException {
@@ -54,9 +54,6 @@ public class CSVonSchedule {
 	public List<String> getLogFiles(String folderPath, String printerName) {
 
 		List<String> logFiles = new ArrayList<String>();
-
-		// File f = new File("C:\\");
-		// ArrayList<File> files = new ArrayList<File>(Arrays.asList(f.listFiles()));
 
 		File f = new File(folderPath);
 		ArrayList<String> names = new ArrayList<String>(Arrays.asList(f.list()));
@@ -119,12 +116,12 @@ public class CSVonSchedule {
 	public List<JobDetail> getJobsSinceJobNumber(int jobNumber)
 			throws ClientProtocolException, IOException, ParseJobException {
 
-		int latestJob = photocopier.getRecentJobs(0).get(0).getJobNumber();
+		int latestJob = printer.getRecentJobs(0).get(0).getJobNumber();
 
 		List<JobDetail> newJobs = new ArrayList<JobDetail>();
 		int getJob = latestJob;
 		do {
-			newJobs.add(photocopier.getJob(getJob));
+			newJobs.add(printer.getJob(getJob));
 			getJob--;
 		} while (getJob > jobNumber);
 
@@ -144,11 +141,10 @@ public class CSVonSchedule {
 	void saveNewJobsByDate(String folderPath, String printerName)
 			throws ClientProtocolException, IOException, ParseJobException {
 
-		String latestLog;
 		List<JobDetail> toSave = new ArrayList<JobDetail>();
 		int getJobsFrom;
 		try {
-			latestLog = getMostRecentLogFileName(folderPath, printerName);
+			String latestLog = getMostRecentLogFileName(folderPath, printerName);
 
 			JobDetailCSV l2csv = new JobDetailCSV(latestLog);
 
