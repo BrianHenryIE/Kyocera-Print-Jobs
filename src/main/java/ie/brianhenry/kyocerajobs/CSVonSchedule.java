@@ -67,12 +67,12 @@ public class CSVonSchedule {
 
 	private static final DateTimeFormatter filenameDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	public String getMostRecentLogFileName(String folderPath, String printerName) throws FileNotFoundException {
+	public String getMostRecentLogFileName(String folderPath, String printerName) {
 
 		List<String> allLogFiles = getLogFiles(folderPath, printerName);
 
 		if (allLogFiles.size() == 0)
-			throw new FileNotFoundException();
+			return null;
 
 		TreeMap<LocalDate, String> orderedLogFiles = new TreeMap<LocalDate, String>();
 
@@ -94,6 +94,9 @@ public class CSVonSchedule {
 	public JobDetail getLastSavedJob(String folderPath, String printerName) throws FileNotFoundException {
 
 		String filename = getMostRecentLogFileName(folderPath, printerName);
+
+		if (filename == null)
+			return null;
 
 		JobDetailCSV file = new JobDetailCSV(folderPath + filename);
 
@@ -120,10 +123,15 @@ public class CSVonSchedule {
 
 		List<JobDetail> newJobs = new ArrayList<JobDetail>();
 		int getJob = latestJob;
-		do {
-			newJobs.add(printer.getJob(getJob));
-			getJob--;
-		} while (getJob > jobNumber);
+		try {
+			do {
+				newJobs.add(printer.getJob(getJob));
+				getJob--;
+			} while (getJob > jobNumber);
+		} catch (ParseJobException e) {
+			// TODO
+			System.out.println("Failure parsing job number " + getJob);
+		}
 
 		return newJobs;
 	}
@@ -133,7 +141,7 @@ public class CSVonSchedule {
 
 		JobDetail lastSavedJob = getLastSavedJob(folderPath, printerName);
 
-		int lastSavedJobNumber = lastSavedJob.getJobNumber();
+		int lastSavedJobNumber = lastSavedJob == null ? 0 : lastSavedJob.getJobNumber();
 
 		return getJobsSinceJobNumber(lastSavedJobNumber);
 	}

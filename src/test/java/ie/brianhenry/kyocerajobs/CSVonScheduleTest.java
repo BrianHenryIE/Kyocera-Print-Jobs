@@ -1,6 +1,6 @@
 package ie.brianhenry.kyocerajobs;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -31,17 +31,19 @@ public class CSVonScheduleTest {
 	}
 
 	@Test
-	public void getMostRecentLogFileName() throws FileNotFoundException {
+	public void getMostRecentLogFileName() {
 
 		String mostRecent = service.getMostRecentLogFileName(folderPath, printerName);
 
 		assertEquals("TestLog2015-11-25.csv", mostRecent);
 	}
 
-	@Test(expected = FileNotFoundException.class)
-	public void getMostRecentLogFileNameFileNotFound() throws FileNotFoundException {
+	@Test
+	public void getMostRecentLogFileNameFileNotFound() {
 
-		service.getMostRecentLogFileName(folderPath + "empty/", printerName);
+		String mostRecent = service.getMostRecentLogFileName(folderPath + "empty/", printerName);
+
+		assertNull(mostRecent);
 	}
 
 	@Test

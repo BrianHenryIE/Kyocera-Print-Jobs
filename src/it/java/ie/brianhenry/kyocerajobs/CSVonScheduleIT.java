@@ -1,6 +1,6 @@
 package ie.brianhenry.kyocerajobs;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,7 +13,7 @@ import org.junit.Test;
 import ie.brianhenry.kyocerajobs.JobDetail.ParseJobException;
 
 public class CSVonScheduleIT {
-	
+
 	// Folder containing the test logs
 	String folderPath = "./src/it/resources/testlogs/empty";
 
@@ -33,7 +33,7 @@ public class CSVonScheduleIT {
 	@Test
 	public void getJobsSinceJobNumberTest() throws ClientProtocolException, IOException, ParseJobException {
 
-		int jobNumber = latestJobNumber - 7;
+		int jobNumber = latestJobNumber - 7 > 0 ? latestJobNumber - 7 : 0;
 
 		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(jobNumber);
 
@@ -42,8 +42,20 @@ public class CSVonScheduleIT {
 	}
 
 	@Test
+	public void getJobsSinceJobNumberZero() throws ClientProtocolException, IOException, ParseJobException {
+
+		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(0);
+
+		assertTrue(recentJobs.size() > 0);
+	}
+
+	@Test
 	public void getJobsSinceJobNumberPage2Test() throws ClientProtocolException, IOException, ParseJobException {
 
+		// TODO How to communicate if the test isn't relevant?
+		if(latestJobNumber - 15 <0)
+			return;
+		
 		int jobNumber = latestJobNumber - 15;
 
 		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(jobNumber);
@@ -51,15 +63,29 @@ public class CSVonScheduleIT {
 		assertEquals(15, recentJobs.size());
 
 	}
+	
+	// Failure parsing job number 5615
+	// latest job    007214	
 
+	@Ignore // extremely long running test
 	@Test
 	public void getJobsSinceJobNumberExceedTest() throws ClientProtocolException, IOException, ParseJobException {
 
-		int jobNumber = latestJobNumber - 150;
+		// TODO How to communicate that the test isn't relevant?
+		if(latestJobNumber - 1601 < 0)
+			return;
+		
+		int jobNumber = latestJobNumber - 1601;
 
 		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(jobNumber);
 
-		assertEquals(150, recentJobs.size());
+		for (JobDetail j : recentJobs) {
+			System.out.println(j.getJobNumber());
+		}
+
+		// 1600 comes from running the test, but is it in config somewhere?
+		// 1500 is set in Management Settings/History Settings
+		assertEquals(1600, recentJobs.size());
 
 	}
 
@@ -81,8 +107,8 @@ public class CSVonScheduleIT {
 		// How to assert and cleanup files?!!
 
 	}
-	
+
 	// teardown
 	// delete files from the folder which should be empty
-	// delete last ten and use them in the other folder? 
+	// delete last ten and use them in the other folder?
 }
