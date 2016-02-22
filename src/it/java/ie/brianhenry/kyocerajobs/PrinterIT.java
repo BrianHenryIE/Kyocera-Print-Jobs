@@ -50,8 +50,6 @@ public class PrinterIT {
 				
 		printer.login(username, password);
 		
-		// SYS_AUTH_ERROR_AUTH_REJECTED
-		
 	}
 
 	@Test
@@ -83,9 +81,7 @@ public class PrinterIT {
 	@Test
 	public void getPrinterNameLiveTest() throws IOException {
 
-		Printer p = new Printer("87.35.237.21");
-
-		assertEquals("MainPhotocopier", p.getPrinterName());
+		assertEquals("MainPhotocopier", printer.getPrinterName());
 
 	}
 
