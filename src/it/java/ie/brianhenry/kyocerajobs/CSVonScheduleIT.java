@@ -42,14 +42,6 @@ public class CSVonScheduleIT {
 	}
 
 	@Test
-	public void getJobsSinceJobNumberZero() throws ClientProtocolException, IOException, ParseJobException {
-
-		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(0);
-
-		assertTrue(recentJobs.size() > 0);
-	}
-
-	@Test
 	public void getJobsSinceJobNumberPage2Test() throws ClientProtocolException, IOException, ParseJobException {
 
 		// TODO How to communicate if the test isn't relevant?
@@ -64,6 +56,15 @@ public class CSVonScheduleIT {
 
 	}
 	
+	@Ignore // extremely long running test
+	@Test
+	public void getJobsSinceJobNumberZero() throws ClientProtocolException, IOException, ParseJobException {
+
+		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(0);
+
+		assertTrue(recentJobs.size() > 0);
+	}
+
 	// Failure parsing job number 5615
 	// latest job    007214	
 
