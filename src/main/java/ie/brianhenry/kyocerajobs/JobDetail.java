@@ -101,7 +101,7 @@ public class JobDetail {
 			
 			System.out.println("no match: JobDetail fromHtml");
 			
-			throw new ParseJobException();
+			throw new ParseJobException(html);
 		}
 
 	}
@@ -194,5 +194,20 @@ public class JobDetail {
 		this.jobNumber = jobNumber;
 	}
 
-	public static class ParseJobException extends Exception{}
+	public static class ParseJobException extends Exception{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 8091738948801165677L;
+		
+		private final String html;
+		
+		public ParseJobException(String html){
+			this.html = html;
+		}
+		
+		public String getHtml(){
+			return html;
+		}
+	}
 }
