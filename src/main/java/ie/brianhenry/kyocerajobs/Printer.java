@@ -1,16 +1,10 @@
 package ie.brianhenry.kyocerajobs;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.net.ssl.SSLContext;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -18,18 +12,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.EntityUtils;
 
 import ie.brianhenry.kyocerajobs.JobDetail.ParseJobException;
@@ -43,36 +27,10 @@ public class Printer {
 		this.printerIp = printerIp;
 	}
 
-	CloseableHttpClient client;
+	CloseableHttpClient client = InsecureHttpClient.client();
+	
 	private String printerModel;
-
-	{
-		// Set up HttpClient to ignore SSL warnings
-		TrustStrategy trustStrategy = new TrustStrategy() {
-			@Override
-			public boolean isTrusted(X509Certificate[] chain, String authType) {
-				return true;
-			}
-		};
-
-		SSLContext sslContext = null;
-		try {
-			sslContext = new SSLContextBuilder().loadTrustMaterial(null, trustStrategy).build();
-		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext,
-				new NoopHostnameVerifier());
-		Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create()
-				.register("http", PlainConnectionSocketFactory.getSocketFactory()).register("https", sslSocketFactory)
-				.build();
-
-		PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(
-				socketFactoryRegistry);
-		client = HttpClients.custom().setSSLContext(sslContext).setConnectionManager(connectionManager).build();
-	}
-
+	
 	public CloseableHttpResponse login(String username, String password) throws ClientProtocolException, IOException {
 
 		// Login!
