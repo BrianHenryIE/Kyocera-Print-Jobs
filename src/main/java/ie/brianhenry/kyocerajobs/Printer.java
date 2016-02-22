@@ -27,7 +27,7 @@ public class Printer {
 		this.printerIp = printerIp;
 	}
 
-	CloseableHttpClient client = InsecureHttpClient.client();
+	CloseableHttpClient client = CarelessHttpClient.client();
 	
 	private String printerModel;
 	

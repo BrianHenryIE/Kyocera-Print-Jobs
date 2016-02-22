@@ -19,9 +19,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 
-public class InsecureHttpClient {
+// Based on https://gist.github.com/helmbold/c7808b17bcf5a5d009cf
+public class CarelessHttpClient {
 
-	private InsecureHttpClient() {
+	private CarelessHttpClient() {
 	}
 
 	public static CloseableHttpClient client() {
