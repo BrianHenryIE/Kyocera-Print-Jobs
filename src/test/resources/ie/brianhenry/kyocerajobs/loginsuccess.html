@@ -1,0 +1,1813 @@
+<!------------------------------------------------------------------------->
+<!-- Copyright (C) 2011 KYOCERA MITA Corporation.                        -->
+<!-- All rights reserved.                                                -->
+<!------------------------------------------------------------------------->
+<html dir="ltr">
+<HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<script language="JavaScript" type="text/javascript">
+var LoginStatus = "7";
+var DigitalPostIt = "_mode_off";
+var OEMFlag = "0";
+if(OEMFlag == 0 || OEMFlag == 2){
+document.write('<TITLE>Command Center RX</TITLE>');
+document.write('<link rel="shortcut icon" href="../favicon.ico">');
+}else{
+document.write('<TITLE></TITLE>');
+}
+</script>
+<script language="JavaScript" type="text/javascript" src="../js/jsallWLM.js"></script>
+<script language="JavaScript" type="text/javascript" src="../js/LocalNavigationWLM.js"></script>
+<script language="JavaScript" type="text/javascript">
+var FaxSupport = "0";
+var color_val = "mono";
+var logintextboxvalidate = "_Local_login"; //default;
+var CurloginStatus = "7";
+var s_usertype = "Unknown";
+var server_domain_val = "0";
+var auth_mode_index = "_mode_off";
+var DBCSupport = "_mode_off";
+var Default_Domain_value =0;
+var FaxCardSupport = "Not Installed";
+var IFaxCardSupport = "Not Installed";
+var FaxNum = "0";
+var getICcardSupport = "0";
+var getICcardType = "_not_ssfc_type";
+var getTMMSLinkMode = "_mode_off";
+var submitclickcontrol="off";
+var idxlangnum = "";
+if(parent.idxlang ==  'opt1'){
+idxlangnum = "55";
+if(idxlangnum == "972"){
+idxlangnum = "971";
+}
+}
+var TMMSSettingValues = Array();
+var curDiv = '';
+var newGroup = 0;
+var newGroupNumber = 0;
+var doc_all = '0';
+var navTxt = "";
+var add_id = Array();
+var addr_id = Array();
+var Domain_name = Array();
+var fax_ID = Array();
+var idCheck = "";
+var docNavThumbList = "";
+var varCopyCount = "";
+var host_to_printflag = 0;
+addressBookEmailCount = 0;
+addressBookFolderCount = 0;
+addressBookifaxCount = 0;
+addressBookfaxCount = 0;
+Domain_name[0] = "";
+Domain_name[1] = "";
+Domain_name[2] = "";
+Domain_name[3] = "";
+Domain_name[4] = "";
+Domain_name[5] = "";
+Domain_name[6] = "";
+Domain_name[7] = "";
+Domain_name[8] = "";
+Domain_name[9] = "";
+Default_Domain_value = server_domain_val;
+
+logintextboxvalidate = "_Dept_login";
+var lang = parent.idxlang;
+var DBCLang="";
+if(parent.idxlang ==  'opt1'){
+if("0" == "1")
+DBCLang = 'jpn';
+}
+var strgetDestinationvalue = "_europe";
+if(strgetDestinationvalue == "_japan"){
+DBCLang = 'jpn';
+}
+var opt_msg1_name = parent.opt_msg1_name;
+var opt_msg1_exist = parent.opt_msg1_exist;
+SelectLang(lang);
+var currentip="";
+currentip = document.referrer;
+temp = currentip.split('/');
+currentip = temp[0]+'//'+temp[2]+'/';
+var systemipaddress = currentip;
+var sendbas_arg37_Color;
+var sendbas_arg38_FileName;
+var sendbas_arg39_AddInformation
+var sendbas_arg40_FileFormat;
+var valaddressbook = 0;
+function Validate(form){
+var selecetedname = 0;
+var selecetedidx = 0;
+if(logintextboxvalidate == "_Domain_login")
+{
+if(document.getElementById('arg06_DomainName_combo'))
+{
+selecetedidx = document.getElementById('arg06_DomainName_combo').selectedIndex;
+selecetedname = document.getElementById('arg06_DomainName_combo').options[selecetedidx].text;
+}
+if(document.getElementById('arg06_DomainName'))
+{
+document.getElementById('arg06_DomainName').value=selecetedname;
+}
+if(document.getElementById('arg06_DomainName_combo'))
+{
+if(document.getElementById('arg06_DomainName_combo').selectedIndex==0)
+{
+document.getElementById('arg03_LoginType').value="1";
+}else
+{
+document.getElementById('arg03_LoginType').value="2";
+}
+}
+
+}
+if(logintextboxvalidate == "_Network_login")
+{
+if(document.getElementById('arg03_LoginType_combo')){
+if(document.getElementById('arg03_LoginType_combo').selectedIndex==0)
+{
+document.getElementById('arg03_LoginType').value="1";
+}else
+{
+document.getElementById('arg03_LoginType').value="2";
+}
+}
+}
+if(document.getElementById('arg01_UserName')){
+if(document.getElementById('arg01_UserName').value == mes[18]){
+document.getElementById('arg01_UserName').value = "";
+}
+}
+if(document.getElementById('arg02_Password')){
+if(document.getElementById('arg02_Password').value && document.getElementById('arg02_Password').type=="text"){
+document.getElementById('arg02_Password').value = "";
+}
+}
+if(document.getElementById('arg05_AccountId')){
+if(document.getElementById('arg05_AccountId').value == mes[17]){
+document.getElementById('arg05_AccountId').value = "";
+}
+}
+
+}
+
+function checkDeptLogin()
+{
+if(logintextboxvalidate=="_Dept_login")
+{
+visibleaccount();
+}
+document.getElementById('leftcolmnmain').style.display = 'block';
+if (getpaperPunch != "Nothing" || getPaperStaple == "Enable"){
+document.getElementById('stapleid').style.display = 'block';
+}else{
+document.getElementById('stapleid').style.display = 'none';
+}
+if (DigitalPostIt == "_mode_on"){
+if(document.getElementById('postlstinfoid') != null)
+document.getElementById('postlstinfoid').style.display = 'block';
+}else{
+if(document.getElementById('postlstinfoid') != null)
+document.getElementById('postlstinfoid').style.display = 'none';
+}
+
+}
+function checkTime()
+{
+//LocalNavLogin(lang, OEMFlag, 7);
+//return true;
+}
+function CheckLoginErrStatus(){
+var tmpMsg1 = "7";
+if(tmpMsg1.length>0){
+CurloginStatus = "7"
+}
+}
+function Topframe()
+{
+var browserCheck = whichBrs();
+if (browserCheck == "Internet Explorer"){
+if(document.getElementById('containIE') != null)
+document.getElementById('containIE').style.top = "64px";
+}
+else{
+if(document.getElementById('contain') != null)
+document.getElementById('contain').style.top = "64px";
+}
+if(document.getElementById('homeset') != null)
+document.getElementById('homeset').style.display = 'none';
+if(window.document.getElementById('Auto') != null){
+window.document.getElementById('Auto').checked = false;
+}
+//var htmlRef = "../startwlm/Link_Links.htm";
+//var iframeInformation = '<iframe id="deviceconfig" name ="deviceconfig" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="0" onload="resizeFrame(this)"; height:0px;  src='+htmlRef+' >You need an iframes capable browser to view this content.</iframe>';
+if(document.getElementById('docustom1') != null)
+document.getElementById('docustom1').style.display = 'none';
+if(document.getElementById('docustom') != null)
+document.getElementById('docustom').style.display = '';
+/*if(document.getElementById('deviceid') != null)
+document.getElementById('deviceid').innerHTML = iframeInformation;*/
+if(document.getElementById('stapleid') != null)
+document.getElementById('stapleid').style.display = 'none';
+if(document.getElementById('panelusaged') != null)
+document.getElementById('panelusaged').style.display = 'none';
+if(document.getElementById('paperid') != null)
+document.getElementById('paperid').style.display = 'none';
+if(document.getElementById('tonerid') != null)
+document.getElementById('tonerid').style.display = 'none';
+if(document.getElementById('postlstinfoid') != null)
+document.getElementById('postlstinfoid').style.display = 'none';
+}
+</script>
+</HEAD>
+
+<body id = "main" onLoad="checkOnLoadMain(); checkDeptLogin(); CheckLoginErrStatus()">
+<!--div id="maindiv"><div-->
+<form action="../startwlm/login.cgi" method="post" name="login" autocomplete="OFF" onSubmit="return Validate(this)"  onLoad="visibleaccount()">
+<input type="hidden" name="failhtmfile" value="/startwlm/Start_Wlm.htm">
+<input type="hidden" name="okhtmfile" value="/startwlm/Start_Wlm.htm">
+<input type="hidden" name="func" value="authLogout">
+
+<script language="JavaScript" type="text/javascript">
+logintextboxvalidate = "_Dept_login";
+</script>
+<input type="hidden" id="arg03_LoginType" name="arg03_LoginType" value="4">
+
+<input type="hidden" name="arg04_LoginFrom" value="_wlm_login">
+<script language="JavaScript" type="text/javascript">
+
+
+var browserCheck = whichBrs();
+if (browserCheck == "Internet Explorer") {
+document.write('<div id="maindivindex" style="width:803px; height:1516px;margin:0 auto;text-align: left;">');
+// document.write('<div id="maindiv">');
+}
+else {
+document.write('<div id="maindivindex" style="width:799px; height:1400px;margin:0 auto;text-align: left;">');
+//   document.write('<div id="maindiv">');
+}
+
+
+
+var loginFlag = "_mode_off";
+
+var getpaperPunch = "Nothing";
+var getPaperStaple = "Enable";
+var loginsFlag = "_mode_off";
+
+var checkloginsFlag = "Unknown";
+
+function resizeFrame(thisFrame) {
+
+//var printjob = frameid.id;
+
+if (browserCheck == "Internet Explorer") {
+
+if(thisFrame.contentDocument && thisFrame.contentDocument.body.offsetHeight)
+{
+//document.getElementById(printjob).style.height =  thisFrame.contentDocument.body.offsetHeight;
+thisFrame.style.height =  thisFrame.contentDocument.body.offsetHeight;
+thisFrame.style.height =  thisFrame.contentDocument.body.scrollHeight;
+}
+else if(thisFrame.contentDocument && thisFrame.contentDocument.body.scrollHeight){
+//document.getElementById(printjob).style.height =  thisFrame.contentDocument.body.scrollHeight;
+thisFrame.style.height =  thisFrame.contentDocument.body.scrollHeight;
+}
+
+else if(thisFrame.Document && thisFrame.Document.body.scrollHeight){
+//document.getElementById(printjob).style.height =  thisFrame.Document.body.scrollHeight;
+thisFrame.style.height =  thisFrame.Document.body.scrollHeight;
+}
+else if(thisFrame.contentDocument){
+//document.getElementById(printjob).style.height = thisFrame.contentDocument.body.offsetHeight;
+thisFrame.style.height =  thisFrame.contentDocument.body.offsetHeight;
+}
+
+
+if(thisFrame.contentDocument && thisFrame.contentDocument.body.offsetWidth)
+{
+//document.getElementById(printjob).style.width =  thisFrame.contentDocument.body.offsetWidth;
+thisFrame.style.width =  thisFrame.contentDocument.body.offsetWidth;
+}
+else if(thisFrame.contentDocument && thisFrame.contentDocument.body.scrollWidth){
+//document.getElementById(printjob).style.width =  thisFrame.contentDocument.body.scrollWidth;
+thisFrame.style.width =  thisFrame.contentDocument.body.scrollWidth;
+}
+
+else if(thisFrame.Document && thisFrame.Document.body.scrollWidth){
+//document.getElementById(printjob).style.width =  thisFrame.Document.body.scrollWidth;
+thisFrame.style.width =  thisFrame.Document.body.scrollWidth;
+}
+else if(thisFrame.contentDocument){
+//document.getElementById(printjob).style.width = thisFrame.contentDocument.body.offsetWidth;
+thisFrame.style.width =  thisFrame.contentDocument.body.offsetWidth;
+}
+thisFrame.style.width = "585px";
+
+}
+
+else
+{
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight +1)+ "px" ;
+thisFrame.style.width = "585px";
+}
+currUrl="startwlm/Hme_PnlUsg.htm"
+if((thisFrame.src).match(currUrl)){
+resizeFramePanel(thisFrame);
+}
+if (browserCheck != "Internet Explorer"){
+currUrl="startwlm/Hme_Toner.htm"
+if((thisFrame.src).match(currUrl)){
+if(thisFrame.contentWindow.document.body.scrollHeight<200)
+resizeFramePanel(thisFrame);
+}
+}
+currUrl="Hme_PnlUsg.htm";
+if((thisFrame.src).match(currUrl)){
+thisFrame.style.height="115px";
+}
+/*if(thisFrame.style.height=="151px"){
+thisFrame.style.height="140px";
+}*/
+currUrl="MyInfo_Auth.htm";
+if((thisFrame.src).match(currUrl)){
+if(varAuthorization == "_mode_off"){
+thisFrame.style.height="0px";
+}else{
+if(FaxCardSupport == "Installed") {
+thisFrame.style.height="275px";
+}else{
+thisFrame.style.height="265px";
+}
+}
+}
+if(thisFrame.contentWindow.hiddenControlDisp)
+thisFrame.contentWindow.hiddenControlDisp();
+}
+
+function resizeFramePanel(thisFrame) {
+if (browserCheck == "Internet Explorer") {
+if(parent.geturlcustomboxinfo == "../startwlm/MyInfo_Auth.htm"){
+thisFrame.style.height= "457px";
+thisFrame.style.width = "585px";
+}
+else {
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight + 2) + "px";
+thisFrame.style.width = (thisFrame.contentWindow.document.body.scrollWidth + 1) + "px";
+}
+
+}
+else {
+if(parent.geturlcustomboxinfo == "../startwlm/MyInfo_Auth.htm"){
+thisFrame.style.height= "460px";
+thisFrame.style.width = "585px";
+} else {
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight - 36) + "px";
+thisFrame.style.width = "585px";
+}
+
+}
+currUrl="Hme_PnlUsg.htm";
+if((thisFrame.src).match(currUrl)){
+thisFrame.style.height="115px";
+}
+currUrl="MyInfo_Auth.htm";
+if((thisFrame.src).match(currUrl)){
+if(varAuthorization == "_mode_off")
+thisFrame.style.height="0px";
+else
+thisFrame.style.height="295px";
+}
+currUrl="MyInfo_AccntInfo.htm";
+if((thisFrame.src).match(currUrl)){
+thisFrame.style.height="600px";
+}
+currUrl="Hme_Toner.htm";
+if((thisFrame.src).match(currUrl)){
+thisFrame.style.height="126px";
+}
+}
+
+function resizeFramedDevice(thisFrame,sList)
+{
+
+if(sList == 1){
+if(varCopyCount == "_mode_on"){
+if (browserCheck == "Internet Explorer") {
+if(thisFrame.contentDocument && thisFrame.contentDocument.body.offsetHeight)
+{
+//document.getElementById(printjob).style.height =  thisFrame.contentDocument.body.offsetHeight;
+thisFrame.style.height =  thisFrame.contentDocument.body.offsetHeight;
+}
+else if(thisFrame.contentDocument && thisFrame.contentDocument.body.scrollHeight){
+//document.getElementById(printjob).style.height =  thisFrame.contentDocument.body.scrollHeight;
+thisFrame.style.height =  thisFrame.contentDocument.body.scrollHeight;
+}
+
+else if(thisFrame.Document && thisFrame.Document.body.scrollHeight){
+//document.getElementById(printjob).style.height =  thisFrame.Document.body.scrollHeight;
+thisFrame.style.height =  thisFrame.Document.body.scrollHeight;
+}
+else if(thisFrame.contentDocument){
+//document.getElementById(printjob).style.height = thisFrame.contentDocument.body.offsetHeight;
+thisFrame.style.height =  thisFrame.contentDocument.body.offsetHeight;
+}
+
+
+if(thisFrame.contentDocument && thisFrame.contentDocument.body.offsetWidth)
+{
+//document.getElementById(printjob).style.width =  thisFrame.contentDocument.body.offsetWidth;
+thisFrame.style.width =  thisFrame.contentDocument.body.offsetWidth;
+}
+else if(thisFrame.contentDocument && thisFrame.contentDocument.body.scrollWidth){
+//document.getElementById(printjob).style.width =  thisFrame.contentDocument.body.scrollWidth;
+thisFrame.style.width =  thisFrame.contentDocument.body.scrollWidth;
+}
+
+else if(thisFrame.Document && thisFrame.Document.body.scrollWidth){
+//document.getElementById(printjob).style.width =  thisFrame.Document.body.scrollWidth;
+thisFrame.style.width =  thisFrame.Document.body.scrollWidth;
+}
+else if(thisFrame.contentDocument){
+//document.getElementById(printjob).style.width = thisFrame.contentDocument.body.offsetWidth;
+thisFrame.style.width =  thisFrame.contentDocument.body.offsetWidth;
+}
+thisFrame.style.width = "585px";
+}
+else {
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight +1)+ "px" ;
+thisFrame.style.width = "585px";
+}
+}
+else if(varCopyCount == "_mode_off"){
+if (browserCheck == "Internet Explorer") {
+
+thisFrame.style.height= "337px";
+thisFrame.style.width = "585px";
+}
+else {
+thisFrame.style.height= "345px";
+thisFrame.style.width = "585px";
+}
+}
+}
+else{
+if(varCopyCount == "_mode_on"){
+if (browserCheck == "Internet Explorer") {
+
+if(geturlAccCount == "../startwlm/MyInf_MyInf_AccCount.htm?arg1=0"){
+thisFrame.style.height= "97px";
+thisFrame.style.width = "585px";
+}
+else {
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight + 2) + "px";
+thisFrame.style.width = (thisFrame.contentWindow.document.body.scrollWidth + 1) + "px";
+}
+}
+
+else {
+if(geturlAccCount == "../startwlm/MyInf_MyInf_AccCount.htm?arg1=0"){
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight +1)+ "px" ;
+thisFrame.style.width = "585px";
+} else {
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight - 36) + "px";
+thisFrame.style.width = "585px";
+}
+}
+}
+else if(varCopyCount == "_mode_off"){
+if (browserCheck == "Internet Explorer") {
+
+if(geturlAccCount == "../startwlm/MyInf_MyInf_AccCount.htm?arg1=0"){
+thisFrame.style.height= "345px";
+thisFrame.style.width = "585px";
+}
+else {
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight + 2) + "px";
+thisFrame.style.width = (thisFrame.contentWindow.document.body.scrollWidth + 1) + "px";
+}
+}
+}else {
+if(geturlAccCount == "../startwlm/MyInf_MyInf_AccCount.htm?arg1=0"){
+thisFrame.style.height= "345px";
+thisFrame.style.width = "585px";
+} else {
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight - 36) + "px";
+thisFrame.style.width = "585px";
+}
+}
+}
+}
+
+function resizeFrameBoxEdit(thisFrame) {
+
+thisFrame.style.height = (thisFrame.contentWindow.document.body.scrollHeight + 20)+ "px" ;
+thisFrame.style.width = (thisFrame.contentWindow.document.body.scrollWidth + 1) + "px";
+
+}
+function ifrmaeHide() {
+document.getElementById('docustom').style.display = "none";
+}
+
+
+function GlobalNavAllTitle(sval1, sval2, sval3, Isparent) {
+var browser ='';
+var str = '';
+if(Isparent == "_parent_" || Isparent == 1){
+browser = browserCheck;
+}else{
+browser = parent.browserCheck;
+}
+
+if (browserCheck == "Internet Explorer")
+str += '<div id = "hometitle" style="width: 585px;">';
+else
+str += '<div id = "hometitle">';
+
+if (browser == "Safari"){
+str += '<table cellpadding=0 cellspacing=0 height = 100% border = 0>';
+str += '<tr height = 38px align = "center"  valign="middle">';
+str += '<td width = 1%>&nbsp;</td><td align="left" width = 3% valign="middle"><img id = "backimage" width = 32px  height = 32px src="../images/back.png" title="'+mes[242]+'" style="cursor: hand;cursor:pointer;" onClick ="documentBack(1)" onMouseOver="CallImageBack(1,1)" onMouseOut="CallImageBack(2,1)"></td><td width = 1%>&nbsp;</td>';
+str += '<td valign="middle"  width = 4% align="left">';
+str += '<img width = 1px height = 38px  src="../images/verticallineBlack.png" alt=""></td>';
+if (lang == "rus"){
+str += '<td width = 55% align="left" valign="middle"><div id="lblTitleid">' + sval1 + '</div></td>';
+str += '<td align="center"  width = 4% valign="middle"><img width = 8% height = 38px  src="../images/verticallineBlack.png" alt=""></td>';
+}
+else
+{
+str += '<td width = 60% align="left" valign="middle"><div id="lblTitleid">' + sval1 + '</div></td>';
+str += '<td align="center"  width = 9% valign="middle"><img width = 3% height = 38px  src="../images/verticallineBlack.png" alt=""></td>';
+}
+
+str += '<td width=30% align="left" valign="middle">'+mes[4] + ':<br><div id="lastupdateTitle">'+sval3+'</div></td><td align="right"  width = 1% valign="middle"></td>';
+str += '<td width = 4% align="left" valign="middle"><img id = "refleshimage" width = 32px  height = 32px  src="../images/refresh.png" title="'+mes[690]+'"  style="cursor: hand;cursor:pointer;" onClick="NavigationIframe(1)" border = "0" onMouseOver="CallRefreshImageBackRefresh(1, 1)" onMouseOut="CallRefreshImageBackRefresh(2, 1)"></td>';
+}else{
+str += '<table cellpadding=0 cellspacing=0 height = 100% border = 0>';
+str += '<tr height = 38px align = "center"  valign="middle">';
+str += '<td width = 1% >&nbsp;</td><td align="left" width = 3% valign="middle"><img id = "backimage" width = 32px  height = 32px src="../images/back.png" title="'+mes[242]+'" style="cursor: hand;cursor:pointer;" onClick ="documentBack(1)" onMouseOver="CallImageBack(1,1)" onMouseOut="CallImageBack(2,1)"></td></td><td width = 1%>&nbsp;</td>';
+str += '<td width = 4% valign="middle" align="left"><img width = 1px height = 38px src="../images/verticallineBlack.png" alt=""></td>';
+if (browser == "Firefox")
+str += '<td width = 50% align="left" valign="middle"><div id="lblTitleid">' + sval1 + '</div></td>';
+else
+str += '<td width = 1%>&nbsp;</td><td width = 50% align="left" valign="middle"><div id="lblTitleid">' + sval1 + '</div></td>';
+if (browser == "Firefox")
+str += '<td align="center"  width = 6% valign="middle"><img width = 3% height = 38px src="../images/verticallineBlack.png" alt=""></td>';
+else
+str += '<td align="center"  width = 9% valign="middle"><img width = 3% height = 38px src="../images/verticallineBlack.png" alt=""></td>';
+str += '<td width=30% align="left" valign="middle">'+mes[4] + ':<br><div id="lastupdateTitle">'+sval3+'</div></td><td align="right"  width = 1% ></td>';
+str += '<td  width = 4% align="left" valign="middle"><img id = "refleshimage" width = 32px  height = 32px  src="../images/refresh.png" title="'+mes[690]+'"  style="cursor: hand;cursor:pointer;" onClick="NavigationIframe(1)" border = "0" onMouseOver="CallRefreshImageBackRefresh(1, 1)" onMouseOut="CallRefreshImageBackRefresh(2, 1)"></td>';
+}
+str += '</tr>';
+str += '</table></div>';
+output(str);
+}
+function filedisplay()
+{
+if(document.getElementById('docustomdown') != null){
+document.getElementById('docustomdown').style.display = 'block';
+}
+if(document.getElementById('panelusaged') != null){
+document.getElementById('panelusaged').style.display = 'block';
+}
+if(document.getElementById('stapleid') != null){
+document.getElementById('stapleid').style.display = 'block';
+}
+
+}
+function PagePreviewArgSettingPrint()
+{
+
+if(PrintSettingDispCheck == "on")
+{
+var VarArg81="";
+var VarArg82="";
+var VarArg83="";
+var VarArg84="";
+var VarArg85="";
+var VarArg86="";
+var VarArg87="";
+var VarArg88="";
+for(var varPageNumber = 0;varPageNumber<1000;varPageNumber++)
+{
+if(varPageNumber<125){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==0)
+VarArg81=PrintSettingDocCheck[varPageNumber];
+else
+VarArg81= VarArg81 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==0)
+VarArg81="0";
+else
+VarArg81= VarArg81 + "/0";
+}
+}else if(varPageNumber>=125 && varPageNumber<250){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==125)
+VarArg82=PrintSettingDocCheck[varPageNumber];
+else
+VarArg82= VarArg82 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==125)
+VarArg82="0";
+else
+VarArg82= VarArg82 + "/0";
+}
+}else if(varPageNumber>=250 && varPageNumber<375){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==250)
+VarArg83=PrintSettingDocCheck[varPageNumber];
+else
+VarArg83= VarArg83 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==250)
+VarArg83="0";
+else
+VarArg83= VarArg83 + "/0";
+}
+}else if(varPageNumber>=375 && varPageNumber<500){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==375)
+VarArg84=PrintSettingDocCheck[varPageNumber];
+else
+VarArg84= VarArg84 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==375)
+VarArg84="0";
+else
+VarArg84= VarArg84 + "/0";
+}
+}else if(varPageNumber>=500 && varPageNumber<625){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==500)
+VarArg85=PrintSettingDocCheck[varPageNumber];
+else
+VarArg85= VarArg85 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==500)
+VarArg85="0";
+else
+VarArg85= VarArg85 + "/0";
+}
+}else if(varPageNumber>=625 && varPageNumber<750){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==625)
+VarArg86=PrintSettingDocCheck[varPageNumber];
+else
+VarArg86= VarArg86 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==625)
+VarArg86="0";
+else
+VarArg86= VarArg86 + "/0";
+}
+}else if(varPageNumber>=750 && varPageNumber<875){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==750)
+VarArg87=PrintSettingDocCheck[varPageNumber];
+else
+VarArg87= VarArg87 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==750)
+VarArg87="0";
+else
+VarArg87= VarArg87 + "/0";
+}
+}else if(varPageNumber>=875 && varPageNumber<1000){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==875)
+VarArg88=PrintSettingDocCheck[varPageNumber];
+else
+VarArg88= VarArg88 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==875)
+VarArg88="0";
+else
+VarArg88= VarArg88 + "/0";
+}
+}
+}
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox")
+{
+document.getElementById('basicprint').contentDocument.printbasic.arg80.value="1";
+document.getElementById('basicprint').contentDocument.printbasic.arg81.value=VarArg81;
+document.getElementById('basicprint').contentDocument.printbasic.arg82.value=VarArg82;
+document.getElementById('basicprint').contentDocument.printbasic.arg83.value=VarArg83;
+document.getElementById('basicprint').contentDocument.printbasic.arg84.value=VarArg84;
+document.getElementById('basicprint').contentDocument.printbasic.arg85.value=VarArg85;
+document.getElementById('basicprint').contentDocument.printbasic.arg86.value=VarArg86;
+document.getElementById('basicprint').contentDocument.printbasic.arg87.value=VarArg87;
+document.getElementById('basicprint').contentDocument.printbasic.arg88.value=VarArg88;
+}
+else
+{
+basicprint.printbasic.arg80.value="1";
+basicprint.printbasic.arg81.value=VarArg81;
+basicprint.printbasic.arg82.value=VarArg82;
+basicprint.printbasic.arg83.value=VarArg83;
+basicprint.printbasic.arg84.value=VarArg84;
+basicprint.printbasic.arg85.value=VarArg86;
+basicprint.printbasic.arg86.value=VarArg86;
+basicprint.printbasic.arg87.value=VarArg87;
+basicprint.printbasic.arg88.value=VarArg88;
+}
+}
+else
+{
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox")
+document.getElementById('basicprint').contentDocument.printbasic.arg80.value="0";
+else
+basicprint.printbasic.arg80.value="0";
+}
+}
+function PagePreviewArgSettingSend()
+{
+if(PrintSettingDispCheck == "on")
+{
+var VarArg81="";
+var VarArg82="";
+var VarArg83="";
+var VarArg84="";
+var VarArg85="";
+var VarArg86="";
+var VarArg87="";
+var VarArg88="";
+for(var varPageNumber = 0;varPageNumber<1000;varPageNumber++)
+{
+if(varPageNumber<125){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==0)
+VarArg81=PrintSettingDocCheck[varPageNumber];
+else
+VarArg81= VarArg81 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==0)
+VarArg81="0";
+else
+VarArg81= VarArg81 + "/0";
+}
+}else if(varPageNumber>=125 && varPageNumber<250){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==125)
+VarArg82=PrintSettingDocCheck[varPageNumber];
+else
+VarArg82= VarArg82 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==125)
+VarArg82="0";
+else
+VarArg82= VarArg82 + "/0";
+}
+}else if(varPageNumber>=250 && varPageNumber<375){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==250)
+VarArg83=PrintSettingDocCheck[varPageNumber];
+else
+VarArg83= VarArg83 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==250)
+VarArg83="0";
+else
+VarArg83= VarArg83 + "/0";
+}
+}else if(varPageNumber>=375 && varPageNumber<500){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==375)
+VarArg84=PrintSettingDocCheck[varPageNumber];
+else
+VarArg84= VarArg84 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==375)
+VarArg84="0";
+else
+VarArg84= VarArg84 + "/0";
+}
+}else if(varPageNumber>=500 && varPageNumber<625){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==500)
+VarArg85=PrintSettingDocCheck[varPageNumber];
+else
+VarArg85= VarArg85 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==500)
+VarArg85="0";
+else
+VarArg85= VarArg85 + "/0";
+}
+}else if(varPageNumber>=625 && varPageNumber<750){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==625)
+VarArg86=PrintSettingDocCheck[varPageNumber];
+else
+VarArg86= VarArg86 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==625)
+VarArg86="0";
+else
+VarArg86= VarArg86 + "/0";
+}
+}else if(varPageNumber>=750 && varPageNumber<875){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==750)
+VarArg87=PrintSettingDocCheck[varPageNumber];
+else
+VarArg87= VarArg87 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==750)
+VarArg87="0";
+else
+VarArg87= VarArg87 + "/0";
+}
+}else if(varPageNumber>=875 && varPageNumber<1000){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==875)
+VarArg88=PrintSettingDocCheck[varPageNumber];
+else
+VarArg88= VarArg88 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==875)
+VarArg88="0";
+else
+VarArg88= VarArg88 + "/0";
+}
+}
+}
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox")
+{
+document.getElementById('basicsend').contentDocument.sendbas.arg80.value="1";
+document.getElementById('basicsend').contentDocument.sendbas.arg81.value=VarArg81;
+document.getElementById('basicsend').contentDocument.sendbas.arg82.value=VarArg82;
+document.getElementById('basicsend').contentDocument.sendbas.arg83.value=VarArg83;
+document.getElementById('basicsend').contentDocument.sendbas.arg84.value=VarArg84;
+document.getElementById('basicsend').contentDocument.sendbas.arg85.value=VarArg85;
+document.getElementById('basicsend').contentDocument.sendbas.arg86.value=VarArg86;
+document.getElementById('basicsend').contentDocument.sendbas.arg87.value=VarArg87;
+document.getElementById('basicsend').contentDocument.sendbas.arg88.value=VarArg88;
+}
+else
+{
+basicsend.sendbas.arg80.value="1";
+basicsend.sendbas.arg81.value=VarArg81;
+basicsend.sendbas.arg82.value=VarArg82;
+basicsend.sendbas.arg83.value=VarArg83;
+basicsend.sendbas.arg84.value=VarArg84;
+basicsend.sendbas.arg85.value=VarArg85;
+basicsend.sendbas.arg86.value=VarArg86;
+basicsend.sendbas.arg87.value=VarArg87;
+basicsend.sendbas.arg88.value=VarArg88;
+}
+}
+else
+{
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox")
+document.getElementById('basicsend').contentDocument.sendbas.arg80.value="0";
+else
+basicsend.sendbas.arg80.value="0";
+}
+}
+function PagePreviewArgSettingDownload()
+{
+
+if(PrintSettingDispCheck == "on")
+{
+var VarArg81="";
+var VarArg82="";
+var VarArg83="";
+var VarArg84="";
+var VarArg85="";
+var VarArg86="";
+var VarArg87="";
+var VarArg88="";
+for(var varPageNumber = 0;varPageNumber<1000;varPageNumber++)
+{
+if(varPageNumber<125){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==0)
+VarArg81=PrintSettingDocCheck[varPageNumber];
+else
+VarArg81= VarArg81 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==0)
+VarArg81="0";
+else
+VarArg81= VarArg81 + "/0";
+}
+}else if(varPageNumber>=125 && varPageNumber<250){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==125)
+VarArg82=PrintSettingDocCheck[varPageNumber];
+else
+VarArg82= VarArg82 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==125)
+VarArg82="0";
+else
+VarArg82= VarArg82 + "/0";
+}
+}else if(varPageNumber>=250 && varPageNumber<375){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==250)
+VarArg83=PrintSettingDocCheck[varPageNumber];
+else
+VarArg83= VarArg83 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==250)
+VarArg83="0";
+else
+VarArg83= VarArg83 + "/0";
+}
+}else if(varPageNumber>=375 && varPageNumber<500){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==375)
+VarArg84=PrintSettingDocCheck[varPageNumber];
+else
+VarArg84= VarArg84 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==375)
+VarArg84="0";
+else
+VarArg84= VarArg84 + "/0";
+}
+}else if(varPageNumber>=500 && varPageNumber<625){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==500)
+VarArg85=PrintSettingDocCheck[varPageNumber];
+else
+VarArg85= VarArg85 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==500)
+VarArg85="0";
+else
+VarArg85= VarArg85 + "/0";
+}
+}else if(varPageNumber>=625 && varPageNumber<750){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==625)
+VarArg86=PrintSettingDocCheck[varPageNumber];
+else
+VarArg86= VarArg86 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==625)
+VarArg86="0";
+else
+VarArg86= VarArg86 + "/0";
+}
+}else if(varPageNumber>=750 && varPageNumber<875){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==750)
+VarArg87=PrintSettingDocCheck[varPageNumber];
+else
+VarArg87= VarArg87 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==750)
+VarArg87="0";
+else
+VarArg87= VarArg87 + "/0";
+}
+}else if(varPageNumber>=875 && varPageNumber<1000){
+if(varPageNumber<PrintSettingDocCheck.length){
+if(varPageNumber==875)
+VarArg88=PrintSettingDocCheck[varPageNumber];
+else
+VarArg88= VarArg88 + "/" +PrintSettingDocCheck[varPageNumber];
+}else{
+if(varPageNumber==875)
+VarArg88="0";
+else
+VarArg88= VarArg88 + "/0";
+}
+}
+}
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox")
+{
+document.getElementById('basicdownload').contentDocument.frmdownload.arg80.value="1";
+document.getElementById('basicdownload').contentDocument.frmdownload.arg81.value=VarArg81;
+document.getElementById('basicdownload').contentDocument.frmdownload.arg82.value=VarArg82;
+document.getElementById('basicdownload').contentDocument.frmdownload.arg83.value=VarArg83;
+document.getElementById('basicdownload').contentDocument.frmdownload.arg84.value=VarArg84;
+document.getElementById('basicdownload').contentDocument.frmdownload.arg85.value=VarArg85;
+document.getElementById('basicdownload').contentDocument.frmdownload.arg86.value=VarArg86;
+document.getElementById('basicdownload').contentDocument.frmdownload.arg87.value=VarArg87;
+document.getElementById('basicdownload').contentDocument.frmdownload.arg88.value=VarArg88;
+}
+else
+{
+basicdownload.frmdownload.arg80.value="1";
+basicdownload.frmdownload.arg81.value=VarArg81;
+basicdownload.frmdownload.arg82.value=VarArg82;
+basicdownload.frmdownload.arg83.value=VarArg83;
+basicdownload.frmdownload.arg84.value=VarArg84;
+basicdownload.frmdownload.arg85.value=VarArg86;
+basicdownload.frmdownload.arg86.value=VarArg86;
+basicdownload.frmdownload.arg87.value=VarArg87;
+basicdownload.frmdownload.arg88.value=VarArg88;
+}
+}
+else
+{
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox")
+document.getElementById('basicdownload').contentDocument.frmdownload.arg80.value="0";
+else
+basicdownload.frmdownload.arg80.value="0";
+}
+}
+function CallMove()
+{
+if(submitclickcontrol == "on"){
+return false;
+}
+
+
+var color_val = "mono";
+if(document.getElementById('hiddPageName').value == mes[179]){
+if(remoteprintoption == "_mode_on"){
+var hrefSource = "../common/Common_Remote_print_prohibit.htm";
+var iframeSourceRemotePrintProhibit = '<iframe id="Remoteprintprohibit" name ="Remoteprintprohibit" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="0" onload="resizeFrame(this)"; height:0px; src="'+hrefSource+'" >You need an iframes capable browser to view this content.</iframe>';
+document.getElementById('deviceid').innerHTML = iframeSourceRemotePrintProhibit;
+
+
+}else{
+var printoly = prtonlyflag;
+var host_to_print = host_to_printflag;
+PagePreviewArgSettingPrint();
+if(document.getElementById('hiddPrintType').value== "Custom")
+{
+var PrnType = "_Gaia2_Model_";
+if(PrnType == "_Mercury2_Model_" || PrnType == "_Zeus2_Model_"){
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+var testvalue = document.getElementById('basicprint').contentDocument.printbasic.arg02_Copies.value;
+if(!numRangechk(testvalue,1,9999)) return false;
+//if(!numRangechk(document.getElementById('alphardprintcopies').contentDocument.frmcopies.arg02_Copies,1,9999)) return false;
+}else{
+
+if(!numRangechk(basicprint.printbasic.arg02_Copies,1,9999)) return false;
+}
+}else{
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+if(!numRangechk(document.getElementById('basicprint').contentDocument.printbasic.arg02_Copies,1,999)) return false;
+}else{
+if(!numRangechk(basicprint.printbasic.arg02_Copies,1,999)) return false;
+}
+}
+AssigValuesPrint(color_val,printoly, host_to_print);
+}
+else if(document.getElementById('hiddPrintType').value== "Fax")
+{
+AssigValuesPrintFax();
+}
+else
+{
+AssigValuesPrintPolling();
+}
+
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+//basicprint.document.printbasic.submit();
+submitclickcontrol = "on";
+document.getElementById('basicprint').contentDocument.printbasic.submit();
+}else{
+submitclickcontrol = "on";
+document.basicprint.printbasic.submit();
+}
+}
+}else if(document.getElementById('hiddPageName').value == mes[397]){
+if(document.getElementById('hiddDwnLoadType').value== "Fax")
+{
+AssigValuesDownloadFax();
+}
+else
+{
+PagePreviewArgSettingDownload();
+AssigValuesDownload();
+}
+
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+//basicdownload.document.frmdownload.submit();
+submitclickcontrol = "on";
+document.getElementById('basicdownload').contentDocument.frmdownload.submit();
+}else{
+submitclickcontrol = "on";
+document.basicdownload.frmdownload.submit();
+}
+
+} else if(document.getElementById('hiddPageName').value == mes[394]){
+
+AssigValuesMove();
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+//alphardbasic.document.movebasic.submit();
+submitclickcontrol = "on";
+document.getElementById('alphardbasic').contentDocument.movebasic.submit();
+}else{
+submitclickcontrol = "on";
+document.alphardbasic.movebasic.submit();
+}
+
+}  else if(document.getElementById('hiddPageName').value == mes[149]){
+AssigValuesCopy();
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+//alphardcopybasic.document.cpybasic.submit();
+submitclickcontrol = "on";
+document.getElementById('alphardcopybasic').contentDocument.cpybasic.submit();
+}else{
+submitclickcontrol = "on";
+document.alphardcopybasic.cpybasic.submit();
+}
+}  else if(document.getElementById('hiddPageName').value == mes[396]){
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox"){
+document.getElementById('basiccombine').contentDocument.combinebas.argNew_Doc_Name.value = dspaceRemoveTrail(document.getElementById('basiccombine').contentDocument.combinebas.argNew_Doc_Name.value);
+document.getElementById('basiccombine').contentDocument.combinebas.argNew_Doc_Name.value = dspaceRemoveLead(document.getElementById('basiccombine').contentDocument.combinebas.argNew_Doc_Name.value);
+var testvalue = document.getElementById('basiccombine').contentDocument.combinebas.argNew_Doc_Name.value;
+if(!emptychk(document.getElementById('basiccombine').contentDocument.combinebas.argNew_Doc_Name.value))
+{
+alert(mes[621]);
+return false;
+}
+if(!chkValidation(15,testvalue))
+{
+return false;
+}
+var filename = h_filename;
+var filecheck = 0;
+var a1 = Array();
+a1 = filename.split('/');
+for(i =0;i<a1.length ;i ++)
+{
+if(testvalue == a1[i])
+{
+if(filenamecheck == "_mode_on")
+{
+var check = confirm(mes[2613]);
+if(check ==true)
+{
+// document.combinebas.submit();
+submitclickcontrol = "on";
+document.getElementById('basiccombine').contentDocument.combinebas.submit();
+filecheck = 1;
+
+}
+else
+{
+filecheck = 1;
+filedisplay();
+return false;
+}
+}
+else
+{
+alert(mes[355]);
+filedisplay();
+return false;
+}
+
+
+if(filecheck != 1 )
+{
+submitclickcontrol = "on";
+document.getElementById('basiccombine').contentDocument.combinebas.submit();
+}
+}
+}
+}else{
+document.basiccombine.combinebas.argNew_Doc_Name.value = dspaceRemoveTrail(document.basiccombine.combinebas.argNew_Doc_Name.value);
+document.basiccombine.combinebas.argNew_Doc_Name.value = dspaceRemoveLead(document.basiccombine.combinebas.argNew_Doc_Name.value);
+var entereddata = document.basiccombine.combinebas.argNew_Doc_Name.value;
+if(!emptychk(document.basiccombine.combinebas.argNew_Doc_Name.value))
+{
+alert(mes[621]);
+return false;
+}
+
+if(!chkValidation(15,entereddata))
+{
+return false;
+}
+}
+if(AssigValuesCombine() == false)
+{
+return false;
+}
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+//basiccombine.document.combinebas.submit();
+submitclickcontrol = "on";
+document.getElementById('basiccombine').contentDocument.combinebas.submit();
+}else{
+submitclickcontrol = "on";
+document.basiccombine.combinebas.submit();
+}
+}  else if(document.getElementById('hiddPageName').value == mes[154]){
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox"){
+document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04.value = deleteDoubleSpaceTrail(document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04.value);
+document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04.value = deleteDoubleSpaceLead(document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04.value);
+if( !exceptchk(document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04, true)) return false;
+sendBasicListValue = document.getElementById('alpharddownloadselectedfile').contentDocument.selecteddwn.arg07[0].value;
+}else{
+sendsettingfinal.sendsetting.arg04.value = deleteDoubleSpaceTrail(sendsettingfinal.sendsetting.arg04.value);
+sendsettingfinal.sendsetting.arg04.value = deleteDoubleSpaceLead(sendsettingfinal.sendsetting.arg04.value);
+sendBasicListValue = alpharddownloadselectedfile.selecteddwn.arg07[0].value;
+if( !exceptchk(sendsettingfinal.sendsetting.arg04, true)) return false;
+if( sendsettingfinal.sendsetting.arg04.value.length > 32 )
+{
+alert(ErrorStrings[118]+": 32 ");
+return false;
+}
+}
+if(document.getElementById('hiddEmaiSID').value == "" && document.getElementById('hiddFolderType').value == "" && document.getElementById('hiddFAXAddress1').value == ""
+&& document.getElementById('hiddIFaxAdd').value == "" && document.getElementById('hiddGroupAddressID').value == "0")
+{
+alert(mes[639]);
+return false;
+}
+PagePreviewArgSettingSend();
+AssigValuesSend("send");
+if(strSendConfDest != "_mode_on"){
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+submitclickcontrol = "on";
+document.getElementById('basicsend').contentDocument.sendbas.submit();
+//basicsend.document.sendbas.submit();
+}else{
+submitclickcontrol = "on";
+document.basicsend.sendbas.submit();
+}
+}else{
+strCstBoxValTest = "set";
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+sendBasic1 = document.getElementById('sendimagequalityfinal').contentDocument.sendimgqual.arg01color.selectedIndex;
+sendBasic2 = document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04.value;
+sendBasic3 = document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg05.selectedIndex;
+sendBasic4 = document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg06.selectedIndex;
+}
+else
+{
+sendBasic1 = sendimagequalityfinal.sendimgqual.arg01color.selectedIndex;
+sendBasic2 = sendsettingfinal.sendsetting.arg04.value;
+sendBasic3 = sendsettingfinal.sendsetting.arg05.selectedIndex;
+sendBasic4 = sendsettingfinal.sendsetting.arg06.selectedIndex;
+}
+var htmlRef = document.getElementById('hiddSend1').value;
+if (browserCheck == "Internet Explorer") {
+htmlRef= htmlRef+"&arg37_Color="+basicsend.sendbas.arg37_Color.value+"&arg38_FileName=&arg39_AddInformation="+basicsend.sendbas.arg39_AddInformation.value+"&arg40_FileFormat="+basicsend.sendbas.arg40_FileFormat.value;
+}else{
+htmlRef= htmlRef+"&arg37_Color="+document.getElementById('basicsend').contentDocument.sendbas.arg37_Color.value+"&arg38_FileName=&arg39_AddInformation="+document.getElementById('basicsend').contentDocument.sendbas.arg39_AddInformation.value+"&arg40_FileFormat="+document.getElementById('basicsend').contentDocument.sendbas.arg40_FileFormat.value;
+}
+var iframeBasicSend = '<iframe id="basicsend" name ="basicsend" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="0" onload="resizeFrame(this)"; height:0px;  src='+htmlRef+' >You need an iframes capable browser to view this content.</iframe>';
+parent.iframeBasicSend = iframeBasicSend;
+
+
+// for send destination
+
+var htmlRef = document.getElementById('hiddSend2').value;
+var iframesenddestination = '<iframe id="alphardsenddestination" name ="alphardsenddestination" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="0" onload="resizeFrame(this)"; height:0px;  src='+htmlRef+' >You need an iframes capable browser to view this content.</iframe>';
+parent.iframesenddestination = iframesenddestination;
+
+document.getElementById('panelusaged').style.display = '';
+document.getElementById('paperid').style.display = 'none';
+document.getElementById('tonerid').style.display = 'none';
+document.getElementById('stapleid').style.display = 'none';
+
+document.getElementById('panelusaged').innerHTML = iframesenddestination ;
+document.getElementById('deviceid').innerHTML = iframeBasicSend;
+window.scrollTo(0,0);
+}
+}  else {
+
+
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox"){
+document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04.value = deleteDoubleSpaceTrail(document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04.value);
+document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04.value = deleteDoubleSpaceLead(document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04.value);
+if( !exceptchk(document.getElementById('sendsettingfinal').contentDocument.sendsetting.arg04, true)) return false;
+}else{
+sendsettingfinal.sendsetting.arg04.value = deleteDoubleSpaceTrail(sendsettingfinal.sendsetting.arg04.value);
+sendsettingfinal.sendsetting.arg04.value = deleteDoubleSpaceLead(sendsettingfinal.sendsetting.arg04.value);
+if( !exceptchk(sendsettingfinal.sendsetting.arg04, true)) return false;
+if( sendsettingfinal.sendsetting.arg04.value.length > 32 )
+{
+alert(ErrorStrings[118]+": 32 ");
+return false;
+}
+}
+if(document.getElementById('hiddEmaiSID').value == "" && document.getElementById('hiddFolderType').value == "" && document.getElementById('hiddFAXAddress1').value == ""
+&& document.getElementById('hiddIFaxAdd').value == "" && (document.getElementById('hiddGroupAddressID').value == "0" || document.getElementById('hiddGroupAddressID').value == ""))
+{
+alert(mes[639]);
+return false;
+}
+AssigValuesSend("sendconfirm");
+
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox") {
+submitclickcontrol = "on";
+document.getElementById('basicsend').contentDocument.sendbas.submit();
+//basicsend.document.sendbas.submit();
+}else{
+submitclickcontrol = "on";
+document.basicsend.sendbas.submit();
+}
+}
+return false;
+}
+
+function SubmitCall1()
+{
+if(whichBrs() == "Mozilla" || whichBrs() == "Firefox"){
+if(document.getElementById('basicsend').contentDocument.sendbas.cheStstus.checked == false)
+{
+alert(mes[632]);
+}
+}
+else
+{
+if(basicsend.sendbas.cheStstus.checked == false)
+{
+alert(mes[632]);
+}
+}
+}
+var sendBackState = "";
+var sendBackArg = "";
+
+var customboxtype = "";
+var customPageUrl = "";
+var customBoxPageUrl = "";
+var loginUserName = "";
+var myinfourl1 = "";
+var myinfourl2 = "";
+var myinfourl3 = "";
+var myinfourl4 = "";
+var testData = new Array();
+testData[0] = 0;
+var totGroupmemberFolderCnt = 0;
+var totGroupmemberEMAILCnt = 0;
+var totGroupmemberFAXCnt = 0;
+var totGroupmemberIFAXCnt = 0;
+var totGroupmemberTotalCnt = 0;
+var totalGroupmember = new Array();
+var SendRxfwdGroupAddressId = new Array();
+var RxfwdGroupAddressId = new Array();
+var totGroupmemberFolderCntLocal = 0;
+var totGroupmemberEMAILCntLocal = 0;
+var totGroupmemberFAXCntLocal = 0;
+var totGroupmemberIFAXCntLocal = 0;
+var totGroupmemberTotalCntLocal = 0;
+var iframedeviceId = new Array();
+var iframepanelusageId = new  Array();
+var iframepaperId = new Array();
+var iframetonerId = new Array();
+var iframepostlstinfoId = new Array();
+var iframestaplepunchId =new  Array();
+
+var iframebreadcrumb1 =new  Array();
+var iframebreadcrumb2 =new  Array();
+var iframebreadcrumb3 =new  Array();
+var iframebreadcrumb4 =new  Array();
+var iframebreadcrumb5 =new  Array();
+var geturlcustomboxinfo = "";
+var geturlAccCount = "";
+var sendDestinationlistChkIdStore1  = new Array();
+var sendDestinationlistChkIdStore2  = new Array();
+var sendDestinationlistChkIdStore3  = new Array();
+var sendDestinationlistChkIdx  = new Array();
+var sendDestinationlistChkIdIndexLocal  = new Array();
+var sendDestinationlistChkIdIndexLocalUnique  = new Array();
+var sendDestinationlistDetail  = new Array();
+var sendDestinationlistType  = new Array();
+var sendDestinationlistID  = new Array();
+var sendAddrGrptype = new Array();
+var sendAddrGrpid = new Array();
+var delete_id = new Array();
+var sendAddrGrpMemCount = 0;
+var toatlcontact = 0;
+var sendDestinationlistTypetemp = new Array();
+var TotalMemberCount = 0;
+var getCurrentPageurl  = "";
+var getDocboxinfourl = "";
+var getDocBoxPageNumber = 0;
+var addressBookChk = new Array();
+var addressBookChk1 = new Array();
+var addressBookAddrType = new Array();
+var addressBookAddrDetail = new Array();
+var addressBookAddrNumber = new Array();
+var customBoxCheckStatus  = new Array();
+var getEmailCnt = 0;
+var addressBookChk_adbk_Reset = new Array();
+var addressBookGrpNumber_adbk_Reset = new Array();
+var addressBookAddrNumber_adbk_Reset = new Array();
+var addressBookAddrDetail_adbk_Reset = new Array();
+var addressBookAddrType_adbk_Reset = new Array();
+var sendAddrGrpMemCount_adbk_Reset = 0;
+var sendDestinationlistChkIdx_adbk_Reset = new Array();
+var customBoxDocNumberInc  = 1;
+var customBoxDocumentType = new Array();
+var customBoxDocNumber  = new Array();
+var customBoxDocNumber_reset  = new Array();
+var customBoxCheckStatus_reset  = new Array();
+var addressBookGrpNumber = new Array();
+var addressBookGroupmemcount = new Array();
+var addressBookGroupmembertype = new Array();
+var strFlg = 0;
+var customBoxName = new Array();
+var customBoxNameCheck = new Array();
+var customBoxStoringType = new Array();
+var ownerBack = "";
+var getFaxCnt = 0;
+var addressBookArrayCnt = 10;
+var addressBookPage = 0;
+var changepropref1 = "";
+var changepropref2 = "";
+var changepropref3 = "";
+var changepropref4 = "";
+iframedeviceId[0] = "../startwlm/Hme_DvcSts.htm";
+iframepanelusageId[0] = "../startwlm/Hme_PnlUsg.htm";
+iframepaperId[0] = "../startwlm/Hme_Paper.htm";
+iframetonerId[0] = "../startwlm/Hme_Toner.htm";
+iframestaplepunchId[0] = "../startwlm/Hme_StplPnch.htm";
+iframepostlstinfoId[0] = "../startwlm/Hme_postlst_info.htm";
+var currentpage="";
+var currentpage1= 0;
+var prtonlyflag = 0;
+var non_prtonlyflag = 0;
+var varPrintBasic = "";
+var varPrintSelectedFile = "";
+var varPrintCopies = "";
+var varPrintSettings = "";
+var varPrintDownloadQuality ="";
+var varPrintType ="";
+var varDownBasic ="";
+var varDownSelectedFile = "";
+var varDownSetting  = "";
+var varDownImgQty = "";
+var varMoveBasic = "";
+var varMoveSelected = "";
+var varMoveDestination = "";
+var varOwnerPrty = "";
+var varredirect = "";
+var varAddBook = "";
+var varAddBookRx = "";
+var varfun_Redir = "";
+var varAccListMng = "";
+var varAccPrptyMng = "";
+var varAuthPrptyMng = "";
+var varAuthPrptyMngLst = "";
+var varAuthPrptyMngDetPrty = "";
+var varAuthGstMng = "";
+var varAuthMngDet = "";
+var varRulNumReg = 0;
+var localvalue = 0;
+var varEachTotCount = "";
+var varEachScnTotCount = "";
+var varEachFaxTotCount = "";
+var varResetCount = "";
+var JobNumber = "";
+var functionItemName = new Array();
+var functionItemType = new Array();
+var functionItemAppType = new Array();
+var functionItemAppId = new Array();
+var functionItemAppName = new Array();
+var ApplTestData = new Array();
+var functionProgramNo = new Array();
+var functionProgramType = new Array();
+var totCount = 0;
+var regFuncType = new Array();
+var regProgramId = new Array();
+var totMenuListCnt = new Array();
+var regApplId = new Array();
+var regApplName = new Array();
+var import_functionItemName = new Array();
+var totVisitCount = 1;
+var currentpageLogin = 0;
+var addressChkMain = Array();
+var agt = navigator.userAgent.toLowerCase();
+var FaxCardSupport = "Not Installed";
+var CipherCheck = "_mode_off";
+var varAccount = "_mode_on";
+var varAuthorization = "_mode_off";
+var ArrContactAddrValues =new Array();
+var AddrConnectionTestBack = "";
+var AddrConnectionTestBackFax = "";
+var AddrConnectionTestBackPop1 = "";
+var AddrConnectionTestBackPop2 = "";
+var AddrConnectionTestBackPop3 = "";
+var CstmSndSmbFoldValues = new Array();
+var CstmBoxConnectionTestBack = "";
+var addressBookChk_Reset = Array();
+var addressBookArrayCnt_Reset = Array();
+var addressBookAddrType_Reset = Array();
+var addressBookAddrNumber_Reset = Array();
+var addressBookAddrDetail_Reset = Array();
+var addressBookGrpNumber_Reset = Array();
+var addressBookGroupmemcount_Reset = Array();
+var addressBookGroupmembertype_Reset = Array();
+var totalGroupmember_Reset = Array();
+var addressBookFldr_ResetCnt = Array();
+var addressBookEMAIL_ResetCnt = Array();
+var addressBookFAXCnt_ResetCnt = Array();
+var addressBookIFAX_ResetCnt = Array();
+var addressBookTotal_Reset = Array();
+
+
+var groupmemberFolderCnt_Reset = 0;
+var groupmemberEMAILCnt_Reset = 0;
+var groupmemberFAXCnt_Reset = 0;
+var groupmemberIFAXCnt_Reset = 0;
+var groupmemberTotal_Reset = 0;
+var strCstBoxValTest = "";
+var totGroupmemberFolderCnt_Reset = Array();
+var totGroupmemberEMAILCnt_Reset = Array();
+var totGroupmemberFAXCnt_Reset = Array();
+var totGroupmemberIFAXCnt_Reset = Array();
+var PrintSettingDocCheck = Array();
+var PrintSettingDocCheck_Reset = Array();
+var PrintSettingDispCheck = "off";
+var PageWisePreviewURL = "";
+var pageWisePreviewCount=0;
+var pageWisePreviewParentPage = "";
+var pageWisePreviewBoxType = "";
+var CstmNewEditURL ="";
+var LangIndex = 0;
+var CertificateSettingURL = "";
+var CertificateID = "";
+var DSMtestData = new Array();
+var IPPSDefltCert = "";
+var ThinDefltCert = "";
+var WSDPrintDefltCert = "";
+var WSDScanDefltCert = "";
+var WSDLScanDefltCert = "";
+var LocalDevProtoCertfId = "";
+var LocalRootProtoCertfId = "";
+var RemotRootProtoCertfId = "";
+var strSendConfDest = "";
+var prvchk = "";
+var printBasicchk1 = "";
+var printBasicchk2 = "";
+var printBasicchk3 = "";
+var printBasicchk4 = "";
+var printBasicchk5 = "";
+var printBasicchk6 = "";
+var printBasicchk7 = "";
+var printBasicchk8 = "";
+var printBasicchk9 = "";
+var strEachTot = "";
+var strEachTotArg = "";
+var prnBack = "";
+var strSeluserId = "";
+var strSeluserName = "";
+var strSeluserJobtype = "";
+var printBackArg = "";
+var allDocumentType_propertyprint = new Array();
+var downloadBasicchk1 = "";
+var downloadBasicchk2 = "";
+var downloadBasicchk3 = "";
+var downloadBackArg = "";
+var strSendLoacl = 0;
+var sendBasic1 = 0;
+var sendBasic2 = "";
+var sendBasic3 = 0;
+var sendBasic4 = 0;
+var sendBasicListValue = "";
+var sendBackArg = "";
+var printsetBck = "";
+var parentChk = "";
+var confirmationcheck = "";
+var movConfirmValues = new Array();
+movConfirmValues[0] ="";
+var MoveBasicScreen = "";
+var MoveSelectedScreen = "";
+var CopyBasicScreen = "";
+var CopySelectedScreen = "";
+var CombineBasicScreen = "";
+var CombineSelectedScreen = "";
+var certificatestatusinfo = "";
+var certificateDeleteBackURL = "";
+var remoteprintoption = "";
+var varEmptyFileNameCheck = "";
+var PageCountPrint = new Array();
+var IpSecTestData = new Array();
+var strSelected = "";
+var strJobselected = "";
+var strPrnStsJobselected = "";
+var strSendStsJobselected = "";
+var strStoreStsJobselected = "";
+var strAddwlmtypeId = "";
+var strAddwlmtypeId1 = "";
+var OneTouchAddrType = "";
+var OneTouchAddrWlmType = "";
+var OneTouchPublicPrivate = "";
+var OneTouchAddrType_ReSet = "";
+var OneTouchAddrName = "";
+var OneTouchAddrName_ReSet = "";
+var OneTouchAddrWlmType_ReSet = "";
+var OneTouchPublicPrivate_ReSet = "";
+var OneTouchPageType = "";
+var strPrivateVal = "";
+var strWlmTypeVal = "";
+var strUserarg = "";
+var strAddBookBack = "";
+var strContactPrpty = "";
+var strPageCount = 0;
+var printchkhide = 0;
+var printchkhideinfo = 0;
+var strnewgrp = 0;
+var strsmpleloginLst = 0;
+var strsmpleloginLstRst = 0;
+var strAddrResetGrpid = new Array();
+var strAddrResetGrptype = new Array();
+var strAddrResetDestinationlistDetail = new Array();
+var strAddrResetDestinationlistChkIdx = new Array();
+var strAddrBookChk = new Array();
+var strFlg = 0;
+var strLocaltot = 0;
+var IpSecCurrentpage="";
+var cstOperation = "";
+var protocolcheck = "";
+var funsetSndFwd = "";
+var funsetRxFwdOpenErr1 = "";
+var funsetRxFwdOpenErr2 = "";
+var ExtAddressBook = new Array();
+var OneTouchKeyProperty = "";
+var strBoxListchk = "";
+var printchkhide1 = 0;
+var moveBasicErrorChk1 = "";
+var copyBasicErrorChk1 = "";
+var copyBasicErrorChk2 = "";
+var copyBasicErrorChk3 = "";
+var strOpenPass = "";
+var strGuestchk = 0;
+var strGuestchk1 = 0;
+var strEditPass = "";
+var strSendFwdAddr = "";
+var defaultview = "list";
+var backvaluecheck ="";
+if(CipherCheck == "_mode_off"){
+CipherCheck = 1;
+}else{
+CipherCheck = 0;
+}
+var varTMMSChangeCheck = "";
+var varTMMSRemoteService = "";
+
+var lastUpdate = "2016/02/22 13:58:48";
+var CstmBoxDelId = 0;
+
+var a = navigator.userAgent||navigator.vendor||window.opera;
+document.write('<link rel="stylesheet" href="../css/mainBase.css">');
+HeaderStatusPC("TASKalfa 5501i","MainPhotocopier","", OEMFlag, color_val);
+document.write('<br>');
+document.write('<div id = "homeset" onMouseOver="hideOnMouseOver()">');
+//GlobalNavAllPC("", "", lastUpdate);
+GlobalNavAllPC("", "", lastUpdate,lang,"_parent_");
+document.write('</div>');
+if (browserCheck == "Internet Explorer") {
+document.write('<div id = "containIE">');	 }
+else {
+document.write('<div id = "contain">');	 }
+
+document.write('<div id = "rightcolmn"  onMouseOver="hideOnMouseOver()">');
+document.write('<div id = "docustom" style="display:none">');
+document.write('<br>');
+GlobalNavAllTitle(mes[28], "", lastUpdate,"_parent_");
+document.write('<table width="585px"><tr height="17px"><td></td></tr></table>');
+document.write('<table><tr height=1px><td><div id= "line1"></div></td></tr></table>');
+document.write('<div id = "lnkdocustom">');
+DocumentBoxCustom("", "", "");
+document.write('</div>');
+document.write('</div>');
+
+document.write('<div id = "docustom1" style="display:none">');
+document.write('<br>');
+GlobalNavAllTitle1(mes[27]+" : "+mes[32], "", lastUpdate,lang);
+document.write('<table width="585px"><tr height="17px"><td></td></tr></table>');
+document.write('<table><tr height=1px><td><div id= "line1"></div></td></tr></table>');
+document.write('<div id = "lnkdocustom">');
+DocumentBoxCustom1("", "", "");
+document.write('</div>');
+document.write('</div>');
+
+document.write('<div id ="deviceid">');
+var hrefSource ='';
+if((LoginStatus == "_validity_expired_") || (LoginStatus == "_password_policy_err_") || (LoginStatus == "_password_access_err_")){
+testData[1] = "";
+testData[2] = "";
+testData[3] = "";
+testData[4] = "";
+var usrname = "";
+parent.usrname = usrname;
+var deptcode = "";
+parent.deptcode = deptcode;
+var domain = "";
+parent.domain = domain;
+var log_type = "";
+parent.log_type = log_type;
+}
+if(LoginStatus == "_validity_expired_"){
+Topframe();
+hrefSource = "../startwlm/" + "Password_Validity_Login.htm";
+}else if(LoginStatus == "_password_policy_err_"){
+Topframe();
+hrefSource = "../startwlm/" + "Start_Wlm_Password_Confirm_Login.htm";
+}
+else if(LoginStatus == "_password_access_err_"){
+Topframe();
+hrefSource = "../startwlm/" + "Start_Wlm_Access_Lock.htm";
+}
+else {
+hrefSource = '../startwlm/' + lastHTMLdevice;
+}
+document.write('<iframe id="device" name ="device" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="no" onload="resizeFrame(this)"; height:0px;  src="' + hrefSource + '" >You need an iframes capable browser to view this content.</iframe>');
+document.write('</div>');
+document.write('<table><tr height=1px><td><div id= "line1"></div></td></tr></table>');
+
+
+document.write('<div id ="panelusaged">');
+if((LoginStatus == "_validity_expired_") || (LoginStatus == "_password_policy_err_") || (LoginStatus == "_password_access_err_")){
+var curDivObj = getObj("panelusaged");
+curDivObj.style.display = 'none';
+} else {
+var hrefSource = '../startwlm/' + lastHTMLpanelusage;
+document.write('<iframe id="panelusage" name ="panelusage" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="0" onload="resizeFrame(this)"; height:0px;  src="' + hrefSource + '" >You need an iframes capable browser to view this content.</iframe>');
+}
+document.write('</div>');
+document.write('<table><tr height=1px><td><div id= "line1"></div></td></tr></table>');
+
+document.write('<div id ="paperid">');
+if((LoginStatus == "_validity_expired_") || (LoginStatus == "_password_policy_err_") || (LoginStatus == "_password_access_err_")){
+var curDivObj = getObj("paperid");
+curDivObj.style.display = 'none';
+} else {
+var hrefSource = '../startwlm/' + lastHTMLpaper;
+document.write('<iframe id="paper" name ="paper" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="no" onload="resizeFrame(this)"; height:0px;  src="' + hrefSource + '"  >You need an iframes capable browser to view this content.</iframe>');
+//document.write('<br>');
+}
+document.write('</div>');
+document.write('<table><tr height=1px><td><div id= "line1"></div></td></tr></table>');
+
+document.write('<div id ="tonerid">');
+if((LoginStatus == "_validity_expired_") || (LoginStatus == "_password_policy_err_") || (LoginStatus == "_password_access_err_")){
+var curDivObj = getObj("tonerid");
+curDivObj.style.display = 'none';
+} else {
+var hrefSource = '../startwlm/' + lastHTMLsample_toner;
+document.write('<iframe id="toner" name ="toner" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="no" onload="resizeFrame(this)"; height:0px;  src="' + hrefSource + '" >You need an iframes capable browser to view this content.</iframe>');
+//document.write('<br>');
+}
+document.write('</div>');
+document.write('<table><tr height=1px><td><div id= "line1"></div></td></tr></table>');
+
+document.write('<div id ="stapleid">');
+if((LoginStatus == "_validity_expired_") || (LoginStatus == "_password_policy_err_") || (LoginStatus == "_password_access_err_")){
+var curDivObj = getObj("stapleid");
+curDivObj.style.display = 'none';
+} else {
+if (getpaperPunch != "Nothing" || getPaperStaple == "Enable"){
+var hrefSource = '../startwlm/' + lastHTMLstaplepunch;
+document.write('<iframe id="staple" name ="staple" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="no" onload="resizeFrame(this)"; height:0px;  src="' + hrefSource + '" >You need an iframes capable browser to view this content.</iframe>');
+}
+}
+document.write('</div>');
+document.write('<table><tr height=9px><td><div id= "line1"></div></td></tr></table>');
+
+document.write('<div id ="postlstinfoid">');
+if((LoginStatus == "_validity_expired_") || (LoginStatus == "_password_policy_err_") || (LoginStatus == "_password_access_err_")){
+var curDivObj = getObj("postlstinfoid");
+curDivObj.style.display = 'none';
+} else {
+var hrefSource = '../startwlm/' + lastHTMLPostListInformation;
+document.write('<iframe id="postlstinfo" name ="postlstinfo" style="background: transparent" allowtransparency="true" scrolling="no" frameborder="no" onload="resizeFrame(this)"; height:0px;  src="' + hrefSource + '" >You need an iframes capable browser to view this content.</iframe>');
+}
+document.write('</div>');
+
+document.write('<div id = "docustomdown" style="display:none">');
+DocumentBoxCustomDown("", "", "");
+document.write('<br>');
+document.write('<br>');
+document.write('</div>');
+
+document.write('<br>');
+document.write('</div>');
+document.write('<div  dir="ltr">');
+document.write('<div id = "leftcolmnmain" style="display:none">');
+//LocalNavLogin(lang, OEMFlag, "7");
+var s_athindx = "_mode_off";
+var s_stsjoblog = "log_all_user";
+if("_login_admin" != "")
+s_usertype="_login_admin";
+
+LocalNavLogin(lang, OEMFlag, CurloginStatus,s_athindx,s_stsjoblog, s_usertype);
+document.write('</div>');
+document.write('</div>');
+document.write('<div  dir="ltr">');
+document.write('<div id = "leftcolmnmain1" onMouseOver="hideOnMouseOver()">');
+//LocalNavLogin(lang, OEMFlag, "7");
+document.write('<table width="100%" height="100%"><tr><td></td></tr></table>');
+document.write('</div>');
+document.write('</div>');
+document.write('</div>');
+document.write('<br>');
+document.write('<input type=hidden name="hndHeight" id="hndHeight" value="0">');
+document.write('</div>');
+
+</script>
+
+</form>
+</body>
+</HTML>

@@ -1,6 +1,7 @@
 package ie.brianhenry.kyocerajobs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -11,11 +12,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 
 import ie.brianhenry.kyocerajobs.JobDetail.ParseJobException;
+import ie.brianhenry.kyocerajobs.Printer.PrinterLoginException;
 
 public class PrinterIT {
 
@@ -29,14 +30,28 @@ public class PrinterIT {
 	}
 
 	@Test
-	public void loginTest() throws ClientProtocolException, IOException {
+	public void loginTest() throws ClientProtocolException, IOException, PrinterLoginException {
 		
 		String username = "Admin";
 		String password = "Admin";
-		CloseableHttpResponse response = printer.login(username, password);
+		
+		printer.login(username, password);
 
-		assertEquals(200, response.getStatusLine().getStatusCode());
+		// assert no exception
+		assertTrue(true);
 
+	}
+	
+	@Test(expected=PrinterLoginException.class)
+	public void loginTestFail() throws ClientProtocolException, IOException, PrinterLoginException {
+		
+		String username = "Admin";
+		String password = "Brian";
+				
+		printer.login(username, password);
+		
+		// SYS_AUTH_ERROR_AUTH_REJECTED
+		
 	}
 
 	@Test

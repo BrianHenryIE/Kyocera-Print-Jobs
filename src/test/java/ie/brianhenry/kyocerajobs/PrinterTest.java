@@ -1,6 +1,7 @@
 package ie.brianhenry.kyocerajobs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -8,9 +9,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.ClientProtocolException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import ie.brianhenry.kyocerajobs.Printer.PrinterLoginException;
 
 public class PrinterTest {
 
@@ -33,6 +37,27 @@ public class PrinterTest {
 		int[] shortJobs = printer.parseJobsListHtml(shortString);
 
 		Assert.assertArrayEquals(shortNumbers, shortJobs);
+
+	}
+
+	@Test
+	public void loginTestSuccess() throws ClientProtocolException, IOException, PrinterLoginException {
+
+		String loginsuccess = IOUtils.toString(this.getClass().getResourceAsStream("loginsuccess.html"), "UTF-8");
+
+		printer.verifyLoggedIn(loginsuccess);
+
+		// assert no exception
+		assertTrue(true);
+
+	}
+
+	@Test(expected = PrinterLoginException.class)
+	public void loginTestFail() throws ClientProtocolException, IOException, PrinterLoginException {
+
+		String loginfailure = IOUtils.toString(this.getClass().getResourceAsStream("loginfailure.html"), "UTF-8");
+
+		printer.verifyLoggedIn(loginfailure);
 
 	}
 

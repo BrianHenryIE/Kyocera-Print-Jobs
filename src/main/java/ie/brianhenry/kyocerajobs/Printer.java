@@ -24,14 +24,14 @@ public class Printer {
 	String printerName;
 
 	CloseableHttpClient client = CarelessHttpClient.client();
-	
+
 	private String printerModel;
 
 	Printer(String printerIp) {
 		this.printerIp = printerIp;
 	}
 
-	CloseableHttpResponse login(String username, String password) throws ClientProtocolException, IOException {
+	void login(String username, String password) throws ClientProtocolException, IOException, PrinterLoginException {
 
 		// Login!
 		HttpPost httpPost = new HttpPost("https://" + printerIp + "/startwlm/login.cgi");
@@ -55,7 +55,25 @@ public class Printer {
 
 		httpPost.setEntity(new UrlEncodedFormEntity(params));
 
-		return client.execute(httpPost);
+		CloseableHttpResponse response = client.execute(httpPost);
+
+		String bodyAsString = EntityUtils.toString(response.getEntity(), "UTF-8");
+
+		verifyLoggedIn(bodyAsString);
+	}
+
+	public void verifyLoggedIn(String html) throws PrinterLoginException {
+
+		String stringPattern = "authLogout";
+
+		Pattern pattern = Pattern.compile(".*" + stringPattern + ".*", Pattern.DOTALL);
+
+		Matcher m = pattern.matcher(html);
+
+		if (m.matches())
+			return;
+		else
+			throw new PrinterLoginException();
 
 	}
 
@@ -73,9 +91,8 @@ public class Printer {
 	}
 
 	/**
-	 * Returns the job details for a page of ten jobs.
-	 * Index starts at 0
-	 * There are only 10? pages. For more jobs, use getRecentJobs()
+	 * Returns the job details for a page of ten jobs. Index starts at 0 There are only 10? pages. For more jobs, use
+	 * getRecentJobs()
 	 * 
 	 * @param pageNumber
 	 * @return
@@ -83,7 +100,8 @@ public class Printer {
 	 * @throws IOException
 	 * @throws ParseJobException
 	 */
-	public List<JobDetail> getRecentJobs(int pageNumber) throws ClientProtocolException, IOException, ParseJobException {
+	public List<JobDetail> getRecentJobs(int pageNumber)
+			throws ClientProtocolException, IOException, ParseJobException {
 
 		List<JobDetail> jobDetails = new ArrayList<JobDetail>();
 
@@ -166,4 +184,11 @@ public class Printer {
 
 	}
 
+	public class PrinterLoginException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4932340365325827550L;
+	}
 }
