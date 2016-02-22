@@ -45,11 +45,17 @@ public class CSVonScheduleTest {
 	}
 
 	@Test
-	public void getMostRecentLogFileName() {
+	public void getMostRecentLogFileName() throws FileNotFoundException {
 
 		String mostRecent = service.getMostRecentLogFileName(folderPath, printerName);
 
 		assertEquals("TestLog2015-11-25.csv", mostRecent);
+	}
+	
+	@Test(expected=FileNotFoundException.class)
+	public void getMostRecentLogFileNameFileNotFound() throws FileNotFoundException {
+
+		service.getMostRecentLogFileName(folderPath+"empty/", printerName);
 	}
 
 	@Test

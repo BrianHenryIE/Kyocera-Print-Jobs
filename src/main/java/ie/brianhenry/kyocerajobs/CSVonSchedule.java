@@ -36,16 +36,19 @@ public class CSVonSchedule {
 		photocopier = new Printer(printerIp);
 	}
 
-	public static void main(String[] args) {
+	public void go() throws ClientProtocolException, IOException, ParseJobException {
+		saveNewJobsByDate(csvFolder, photocopier.getPrinterName());
+	}
+
+	public static void main(String[] args) throws ClientProtocolException, IOException, ParseJobException {
 
 		String printerIp = "87.35.237.21";
 
-		String csvFolder = "photocopierlogs.csv";
+		String csvFolder = "/Users/brianhenry/Sites/kyocerajobs";
 
 		CSVonSchedule service = new CSVonSchedule(printerIp, csvFolder);
 
-		service.saveNewJobsByDate();
-
+		service.go();
 	}
 
 	public List<String> getLogFiles(String folderPath, String printerName) {
@@ -67,9 +70,12 @@ public class CSVonSchedule {
 
 	private static final DateTimeFormatter filenameDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	public String getMostRecentLogFileName(String folderPath, String printerName) {
+	public String getMostRecentLogFileName(String folderPath, String printerName) throws FileNotFoundException {
 
 		List<String> allLogFiles = getLogFiles(folderPath, printerName);
+
+		if (allLogFiles.size() == 0)
+			throw new FileNotFoundException();
 
 		TreeMap<LocalDate, String> orderedLogFiles = new TreeMap<LocalDate, String>();
 
@@ -91,10 +97,10 @@ public class CSVonSchedule {
 	public JobDetail getLastSavedJob(String folderPath, String printerName) throws FileNotFoundException {
 
 		String filename = getMostRecentLogFileName(folderPath, printerName);
+
 		JobDetailCSV file = new JobDetailCSV(folderPath + filename);
 
 		List<JobDetail> jobs = file.readCSV();
-		
 
 		return jobs.get(jobs.size() - 1);
 	}
@@ -133,6 +139,65 @@ public class CSVonSchedule {
 		int lastSavedJobNumber = lastSavedJob.getJobNumber();
 
 		return getJobsSinceJobNumber(lastSavedJobNumber);
+	}
+
+	void saveNewJobsByDate(String folderPath, String printerName)
+			throws ClientProtocolException, IOException, ParseJobException {
+
+		String latestLog;
+		List<JobDetail> toSave = new ArrayList<JobDetail>();
+		int getJobsFrom;
+		try {
+			latestLog = getMostRecentLogFileName(folderPath, printerName);
+
+			JobDetailCSV l2csv = new JobDetailCSV(latestLog);
+
+			toSave = l2csv.readCSV();
+
+			getJobsFrom = getLastSavedJob(folderPath, printerName).getJobNumber();
+		} catch (FileNotFoundException e) {
+			getJobsFrom = 0;
+		}
+
+		List<JobDetail> newJobs = getJobsSinceJobNumber(getJobsFrom);
+
+		toSave.addAll(newJobs);
+
+		// Sort by date
+		Collections.sort(toSave, new Comparator<JobDetail>() {
+			@Override
+			public int compare(final JobDetail lhs, JobDetail rhs) {
+				if (lhs.getAcceptedTime().isBefore(rhs.getAcceptedTime()))
+					return 1;
+				else if (lhs.getAcceptedTime().isAfter(rhs.getAcceptedTime()))
+					return -1;
+				else
+					return 0;
+			}
+		});
+
+		LocalDate savingDate = null;
+		JobDetailCSV dateCSV = null;
+		List<JobDetail> saveNow = null;
+
+		// balls to this. just use a treeset
+		for (JobDetail j : toSave) {
+
+			// when we move to a new date
+			// or the first
+			if (savingDate == null || !j.getAcceptedTime().toLocalDate().equals(savingDate)) {
+
+				// If we're on to a new date and have data, save it
+				if (dateCSV != null && saveNow != null)
+					dateCSV.write(saveNow);
+
+				// Then clear things read to go around again
+				saveNow = new ArrayList<JobDetail>();
+				dateCSV = new JobDetailCSV(j.getAcceptedTime().toLocalDate().toString());
+			}
+
+		}
+
 	}
 
 }
