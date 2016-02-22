@@ -15,7 +15,7 @@ import ie.brianhenry.kyocerajobs.JobDetail.ParseJobException;
 public class CSVonScheduleIT {
 	
 	// Folder containing the test logs
-	String folderPath = "./src/test/resources/testlogs/";
+	String folderPath = "./src/it/resources/testlogs/empty";
 
 	String printerName = "TestLog";
 
@@ -81,4 +81,8 @@ public class CSVonScheduleIT {
 		// How to assert and cleanup files?!!
 
 	}
+	
+	// teardown
+	// delete files from the folder which should be empty
+	// delete last ten and use them in the other folder? 
 }

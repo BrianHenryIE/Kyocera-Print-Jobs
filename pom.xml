@@ -7,6 +7,9 @@
 	<name>Kyocera Print Jobs Service</name>
 	<description>Watches printer for new jobs, gets their details</description>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<dependencies>
 		<dependency>
