@@ -1,12 +1,9 @@
 package ie.brianhenry.kyocerajobs;
 
-import static org.junit.Assert.*;
-
 import java.io.IOException;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -23,72 +20,6 @@ public class CSVonScheduleIT {
 
 	Printer photocopier = new Printer("87.35.237.21");
 
-	int latestJobNumber;
-
-	@Before
-	public void setup() throws ClientProtocolException, IOException, ParseJobException {
-		latestJobNumber = photocopier.getRecentJobs(0).get(0).getJobNumber();
-	}
-
-	@Test
-	public void getJobsSinceJobNumberTest() throws ClientProtocolException, IOException, ParseJobException {
-
-		int jobNumber = latestJobNumber - 7 > 0 ? latestJobNumber - 7 : 0;
-
-		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(jobNumber);
-
-		assertEquals(7, recentJobs.size());
-
-	}
-
-	@Test
-	public void getJobsSinceJobNumberPage2Test() throws ClientProtocolException, IOException, ParseJobException {
-
-		// TODO How to communicate if the test isn't relevant?
-		if(latestJobNumber - 15 <0)
-			return;
-		
-		int jobNumber = latestJobNumber - 15;
-
-		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(jobNumber);
-
-		assertEquals(15, recentJobs.size());
-
-	}
-	
-	@Ignore // extremely long running test
-	@Test
-	public void getJobsSinceJobNumberZero() throws ClientProtocolException, IOException, ParseJobException {
-
-		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(0);
-
-		assertTrue(recentJobs.size() > 0);
-	}
-
-	// Failure parsing job number 5615
-	// latest job    007214	
-
-	@Ignore // extremely long running test
-	@Test
-	public void getJobsSinceJobNumberExceedTest() throws ClientProtocolException, IOException, ParseJobException {
-
-		// TODO How to communicate that the test isn't relevant?
-		if(latestJobNumber - 1601 < 0)
-			return;
-		
-		int jobNumber = latestJobNumber - 1601;
-
-		List<JobDetail> recentJobs = service.getJobsSinceJobNumber(jobNumber);
-
-		for (JobDetail j : recentJobs) {
-			System.out.println(j.getJobNumber());
-		}
-
-		// 1600 comes from running the test, but is it in config somewhere?
-		// 1500 is set in Management Settings/History Settings
-		assertEquals(1600, recentJobs.size());
-
-	}
 
 	@Ignore
 	@Test
@@ -96,10 +27,9 @@ public class CSVonScheduleIT {
 
 		List<JobDetail> recentJobs = service.getJobsSinceLastSavedJob(folderPath, printerName);
 
-		for (JobDetail jd : recentJobs) {
+		for (JobDetail jd : recentJobs) 
 			System.out.println(jd.getJobNumber());
-		}
-
+	
 	}
 
 	@Test

@@ -91,6 +91,37 @@ public class Printer {
 	}
 
 	/**
+	 * Returns the details for all jobs since the number specified
+	 * 
+	 * Command Centre only stores the last 100 jobs
+	 * 
+	 * @param jobNumber
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 * @throws ParseJobException
+	 */
+	public List<JobDetail> getJobsSinceJobNumber(int jobNumber)
+			throws ClientProtocolException, IOException, ParseJobException {
+
+		int latestJob = getRecentJobs(0).get(0).getJobNumber();
+
+		List<JobDetail> newJobs = new ArrayList<JobDetail>();
+		int getJob = latestJob;
+		try {
+			do {
+				newJobs.add(getJob(getJob));
+				getJob--;
+			} while (getJob > jobNumber);
+		} catch (ParseJobException e) {
+			// TODO
+			System.out.println("Failure parsing job number " + getJob);
+		}
+
+		return newJobs;
+	}
+	
+	/**
 	 * Returns the job details for a page of ten jobs. Index starts at 0 There are only 10? pages. For more jobs, use
 	 * getRecentJobs()
 	 * 
