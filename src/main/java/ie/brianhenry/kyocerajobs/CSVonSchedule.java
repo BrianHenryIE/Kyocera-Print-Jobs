@@ -1,10 +1,10 @@
 package ie.brianhenry.kyocerajobs;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -45,32 +45,22 @@ public class CSVonSchedule {
 		service.go();
 	}
 
-
-
-	public List<JobDetail> getJobsSinceLastSavedJob(String folderPath, String printerName)
-			throws ClientProtocolException, IOException, ParseJobException {
-
-		JobDetail lastSavedJob = LogFiles.getLastSavedJob(folderPath, printerName);
-
-		int lastSavedJobNumber = lastSavedJob == null ? 0 : lastSavedJob.getJobNumber();
-
-		return printer.getJobsSinceJobNumber(lastSavedJobNumber);
-	}
-
 	void saveNewJobsByDate(String folderPath, String printerName)
 			throws ClientProtocolException, IOException, ParseJobException {
 
 		List<JobDetail> toSave = new ArrayList<JobDetail>();
 		int getJobsFrom;
-		try {
-			String latestLog = LogFiles.getMostRecentLogFileName(folderPath, printerName);
 
+		String latestLog = LogFiles.getMostRecentLogFileName(folderPath, printerName);
+
+		if (latestLog != null) {
 			JobDetailCSV l2csv = new JobDetailCSV(latestLog);
 
+			// We'll be resaving the latest csv as it may have new jobs
 			toSave = l2csv.readCSV();
 
 			getJobsFrom = LogFiles.getLastSavedJob(folderPath, printerName).getJobNumber();
-		} catch (FileNotFoundException e) {
+		} else {
 			getJobsFrom = 0;
 		}
 
@@ -78,9 +68,16 @@ public class CSVonSchedule {
 
 		toSave.addAll(newJobs);
 
-		LocalDate savingDate = null;
-		JobDetailCSV dateCSV = null;
-		List<JobDetail> saveNow = null;
+		LogFiles.sortJobsByNumber(toSave);
+
+		TreeMap<LocalDate, List<JobDetail>> sorted = LogFiles.splitJobsByDate(toSave);
+
+		for (LocalDate day : sorted.keySet()) {
+
+			JobDetailCSV jd = new JobDetailCSV(csvFolder + "/" + printer.getPrinterName() + day.toString());
+			jd.write(sorted.get(day));
+
+		}
 
 	}
 

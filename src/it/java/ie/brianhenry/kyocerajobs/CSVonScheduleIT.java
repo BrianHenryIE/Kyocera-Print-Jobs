@@ -21,17 +21,6 @@ public class CSVonScheduleIT {
 	Printer photocopier = new Printer("87.35.237.21");
 
 
-	@Ignore
-	@Test
-	public void getJobsSinceLastSavedJobTest() throws ClientProtocolException, IOException, ParseJobException {
-
-		List<JobDetail> recentJobs = service.getJobsSinceLastSavedJob(folderPath, printerName);
-
-		for (JobDetail jd : recentJobs) 
-			System.out.println(jd.getJobNumber());
-	
-	}
-
 	@Test
 	public void saveNewJobsByDateTest() {
 

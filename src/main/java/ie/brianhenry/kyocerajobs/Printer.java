@@ -37,7 +37,7 @@ public class Printer {
 		HttpPost httpPost = new HttpPost("https://" + printerIp + "/startwlm/login.cgi");
 
 		// Set headers
-		httpPost.setHeader("Referer", "https://" + printerIp + "/startwlm/Start_Wlm.htm"); // *
+		httpPost.setHeader("Referer", "https://" + printerIp + "/startwlm/Start_Wlm.htm");
 
 		// Set form data
 		// It didn't work without the empty ones

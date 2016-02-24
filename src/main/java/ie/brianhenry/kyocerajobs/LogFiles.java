@@ -87,7 +87,7 @@ public class LogFiles {
 		return treeMap;
 	}
 
-	public static List<JobDetail> sortJobsByNumber(List<JobDetail> jobs) {
+	public static void sortJobsByNumber(List<JobDetail> jobs) {
 
 		// Sort by date
 		Collections.sort(jobs, new Comparator<JobDetail>() {
@@ -102,7 +102,6 @@ public class LogFiles {
 			}
 		});
 
-		return jobs;
 	}
 
 }
